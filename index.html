@@ -1,197 +1,268 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propart Diagnostic - Command Center</title>
+    <title>Propart Diagnostic Master V3.0 | JULS & MILLAN</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            height: 350px; 
+            max-height: 400px; 
         }
-
-        .cyber-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1rem;
-            transition: all 0.3s ease;
+        .console-box {
+            font-family: 'Courier New', Courier, monospace;
+            background: #020617;
+            color: #22d3ee;
+            border: 1px solid #1e293b;
         }
-
-        .cyber-card:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .tech-font {
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .neon-text-blue {
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
-        }
-
-        .status-pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        canvas {
-            max-width: 100%;
+        .premium-border {
+            border: 2px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(to right, #2563eb, #fbbf24) border-box;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <!-- Header -->
-    <header class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-blue-500 pb-6">
-        <div>
-            <h1 class="text-4xl font-bold tech-font text-blue-400 neon-text-blue">PROPART DIAGNOSTIC</h1>
-            <p class="text-gray-400 mt-1">Socio: <span class="text-white font-bold">MILLAN</span> | Lead Dev & Tech: <span class="text-blue-300">JULS</span></p>
-        </div>
-        <div class="mt-4 md:mt-0 flex items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="w-3 h-3 bg-green-500 rounded-full status-pulse"></span>
-                <span class="text-sm font-medium">SISTEMAS ONLINE</span>
-            </div>
-            <div class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm tracking-wider">
-                VERSION 2.5 PRO
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- Stats & Levels -->
-        <div class="cyber-card p-6 flex flex-col justify-between">
-            <h2 class="text-xl font-bold mb-4 tech-font flex items-center gap-2 text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                NIVELES DE SERVICIO
-            </h2>
-            <div class="space-y-4">
-                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-gray-400">
-                    <p class="text-sm text-gray-400">Nivel Actual</p>
-                    <p class="text-2xl font-bold text-gray-200">PLATA</p>
-                    <div class="w-full bg-gray-700 h-2 mt-2 rounded-full">
-                        <div class="bg-gray-400 h-2 rounded-full" style="width: 100%"></div>
-                    </div>
+    <!-- Nav Master -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 text-white font-black px-2 py-1 rounded text-xs">PRO</div>
+                    <span class="text-xl font-black text-slate-800 tracking-tighter uppercase">PROPART <span class="text-blue-600">MILLÁN</span></span>
                 </div>
-                <div class="bg-blue-900/40 p-4 rounded-lg border-l-4 border-blue-400">
-                    <p class="text-sm text-blue-300">Nivel Superior</p>
-                    <p class="text-2xl font-bold text-blue-100">PREMIUM</p>
-                    <div class="w-full bg-gray-700 h-2 mt-2 rounded-full">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: 65%"></div>
-                    </div>
-                    <p class="text-xs mt-2 text-blue-200">65% de usuarios migrados</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Diagnostic Tools -->
-        <div class="cyber-card p-6 md:col-span-2">
-            <h2 class="text-xl font-bold mb-4 tech-font flex items-center gap-2 text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-                CONSOLA DE DIAGNÓSTICO RÁPIDO
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onclick="logAction('Buscando diagramas ECU...')" class="p-4 bg-slate-800 hover:bg-blue-600 rounded-xl transition flex flex-col items-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">📄</span>
-                    <span class="text-xs font-bold uppercase tracking-tighter">Diagramas</span>
-                </button>
-                <button onclick="logAction('Iniciando escaneo de módulos...')" class="p-4 bg-slate-800 hover:bg-blue-600 rounded-xl transition flex flex-col items-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🔍</span>
-                    <span class="text-xs font-bold uppercase tracking-tighter">Escáner</span>
-                </button>
-                <button onclick="logAction('Abriendo editor de EEPROM...')" class="p-4 bg-slate-800 hover:bg-blue-600 rounded-xl transition flex flex-col items-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">💾</span>
-                    <span class="text-xs font-bold uppercase tracking-tighter">Programación</span>
-                </button>
-                <button onclick="logAction('Generando holograma 3D...')" class="p-4 bg-slate-800 hover:bg-blue-600 rounded-xl transition flex flex-col items-center gap-2 group">
-                    <span class="text-2xl group-hover:scale-110 transition">🧊</span>
-                    <span class="text-xs font-bold uppercase tracking-tighter">Proyección 3D</span>
-                </button>
-            </div>
-            
-            <div id="console-output" class="mt-6 bg-black/50 p-4 rounded border border-blue-900/50 h-32 overflow-y-auto font-mono text-sm text-green-400">
-                > Sistema inicializado...<br>
-                > JULS listo para la acción.<br>
-                > Esperando órdenes de Millan...
-            </div>
-        </div>
-
-        <!-- Project Builder (The "Genius" Section) -->
-        <div class="cyber-card p-6 md:col-span-3">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                <h2 class="text-2xl font-bold tech-font text-blue-300">LABORATORIO DE PROYECTOS</h2>
-                <div class="flex gap-2 mt-2 md:mt-0">
-                    <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold">IA ACTIVE</span>
-                    <span class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-xs font-bold">ELECTROMECÁNICA</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <div class="p-4 border border-blue-500/20 rounded-lg hover:bg-blue-500/5 cursor-pointer">
-                        <h3 class="font-bold text-blue-400">Generador de Luz (C.A./C.D.)</h3>
-                        <p class="text-sm text-gray-400">Planos detallados y modelado 3D para fabricación desde cero.</p>
-                    </div>
-                    <div class="p-4 border border-blue-500/20 rounded-lg hover:bg-blue-500/5 cursor-pointer">
-                        <h3 class="font-bold text-blue-400">Cautín Regulable Digital</h3>
-                        <p class="text-sm text-gray-400">Control de temperatura por microcontrolador y display OLED.</p>
-                    </div>
-                    <div class="p-4 border border-blue-500/20 rounded-lg hover:bg-blue-500/5 cursor-pointer">
-                        <h3 class="font-bold text-blue-400">Analizador de Buses CAN</h3>
-                        <p class="text-sm text-gray-400">Herramienta propia para interceptar mensajes en tiempo real.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-black/40 rounded-lg p-4 flex flex-col items-center justify-center border border-dashed border-gray-600">
-                    <!-- Placeholder for 3D Visualizer -->
-                    <div class="text-center">
-                        <div class="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-xl opacity-20 animate-pulse"></div>
-                        <p class="tech-font text-blue-300 animate-bounce">MODO HOLOGRÁFICO</p>
-                        <p class="text-xs text-gray-500 mt-2">Selecciona un proyecto para proyectar el esquema 3D</p>
+                <div class="flex gap-4">
+                    <div id="bt-status-pill" class="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+                        <div id="bt-led" class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                        <span id="bt-status-text" class="text-[10px] font-bold text-slate-500 uppercase">Scanner Offline</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <footer class="mt-10 text-center text-gray-500 text-xs tracking-[0.2em] uppercase">
-        Propart Diagnostic &copy; 2024 | Design by JULS AI Systems
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        <!-- Intro & Capabilities Section -->
+        <section id="section-intro" class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Ingeniería en Diagnóstico <br><span class="text-blue-600">Automotriz Especializado</span></h1>
+                    <p class="text-slate-600 mb-8 leading-relaxed">Socio Millán, esta versión V3.0 integra el motor de sincronización Bluetooth real para interfaces vLink y ELM327. Ya no es solo diseño, es potencia técnica.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+                            <span class="block text-xl font-bold text-blue-600">Nivel Plata</span>
+                            <span class="text-xs text-slate-500">Mantenimiento y diagnóstico básico.</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
+                            <span class="block text-xl font-bold text-amber-600">Nivel Premium</span>
+                            <span class="text-xs text-slate-500">ECUs, 3D y Software avanzado.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="capabilitiesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bluetooth Scanner Section (The Fix) -->
+        <section id="section-scanner" class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold flex items-center gap-2">
+                            <span>🔍</span> MÓDULO DE SINCRONIZACIÓN BT
+                        </h2>
+                        <p class="text-slate-400 text-sm mt-1">Detecta interfaces vLink, OBDII y ELM327 en tiempo real.</p>
+                    </div>
+                    <button id="btn-sync" onclick="syncScanner()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black px-8 py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm">
+                        📡 Sincronizar Scanner
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Dashboard Mini -->
+                    <div class="lg:col-span-1 space-y-4">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Protocolo Detectado</span>
+                            <div id="protocol-val" class="text-xl font-mono text-emerald-400 mt-1">-- --- --</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Voltaje Batería</span>
+                            <div id="voltage-val" class="text-3xl font-mono text-white mt-1">0.0V</div>
+                        </div>
+                    </div>
+                    <!-- Real Console -->
+                    <div class="lg:col-span-2 flex flex-col">
+                        <div class="bg-black/50 border border-white/10 rounded-t-2xl px-4 py-2 flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Terminal de Datos Propart</span>
+                            <button onclick="clearConsole()" class="text-[10px] text-blue-400 font-bold uppercase">Limpiar</button>
+                        </div>
+                        <div id="console-output" class="console-box flex-grow h-48 rounded-b-2xl p-4 overflow-y-auto text-xs leading-relaxed">
+                            > Sistema inicializado...<br>
+                            > Esperando orden del socio Millán...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Lab (From Screenshot 4) -->
+        <section id="section-lab" class="space-y-6">
+            <div class="flex items-center gap-4">
+                <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Laboratorio de Proyectos</h2>
+                <div class="h-px flex-grow bg-slate-200"></div>
+                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Electromecánica IA</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">💡</div>
+                    <h3 class="font-bold text-slate-900">Generador de Luz</h3>
+                    <p class="text-sm text-slate-500 mt-2">Planos y modelado para fabricación C.A./C.D.</p>
+                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Holograma</button>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">🌡️</div>
+                    <h3 class="font-bold text-slate-900">Cautín Regulable</h3>
+                    <p class="text-sm text-slate-500 mt-2">Control digital de temperatura por Micro-chip.</p>
+                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Esquema</button>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">📡</div>
+                    <h3 class="font-bold text-slate-900">Analizador Bus CAN</h3>
+                    <p class="text-sm text-slate-500 mt-2">Intercepción de mensajes de red en tiempo real.</p>
+                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Trama</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-500 font-bold text-sm tracking-widest uppercase">PROPART DIAGNOSTIC © 2026</p>
+            <p class="text-slate-400 text-xs mt-2">Socio Tecnológico: JULS AI Specialist | Proyecciones 3D & Electromecánica</p>
+        </div>
     </footer>
 
     <script>
-        function logAction(message) {
+        // --- DATA HUB ---
+        const capabilitiesData = {
+            labels: ['Diagnóstico', 'Software', 'Electrónica', 'Diésel', 'Llaves', 'Asistencia'],
+            datasets: [
+                {
+                    label: 'Nivel Plata',
+                    data: [70, 45, 40, 60, 80, 50],
+                    backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                    borderColor: '#94a3b8',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Nivel Premium',
+                    data: [100, 95, 90, 85, 100, 100],
+                    backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                    borderColor: '#2563eb',
+                    borderWidth: 3
+                }
+            ]
+        };
+
+        // --- BLUETOOTH ENGINE ---
+        let bluetoothDevice = null;
+        let gattServer = null;
+        let diagnosticChar = null;
+
+        const UUIDS = {
+            OBD_SERVICE: '0000fff0-0000-1000-8000-00805f9b34fb', // Común en ELM327 BLE
+            OBD_CHAR: '0000fff1-0000-1000-8000-00805f9b34fb'
+        };
+
+        async function syncScanner() {
             const consoleBox = document.getElementById('console-output');
-            const timestamp = new Date().toLocaleTimeString([], { hour12: false });
-            consoleBox.innerHTML += `<br>> [${timestamp}] ${message}`;
-            consoleBox.scrollTop = consoleBox.scrollHeight;
+            const btn = document.getElementById('btn-sync');
+            
+            try {
+                logConsole("Iniciando búsqueda de dispositivos Bluetooth...");
+                
+                // Pedir dispositivo con el estándar OBDII
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    filters: [{ namePrefix: 'IOS-Vlink' }, { namePrefix: 'OBDII' }, { namePrefix: 'vLink' }],
+                    optionalServices: [UUIDS.OBD_SERVICE]
+                });
+
+                logConsole(`Conectando a: ${bluetoothDevice.name}...`);
+                btn.innerText = "Conectando...";
+                
+                gattServer = await bluetoothDevice.gatt.connect();
+                logConsole("Servidor GATT conectado.");
+                
+                // Buscar servicios
+                const service = await gattServer.getPrimaryService(UUIDS.OBD_SERVICE);
+                diagnosticChar = await service.getCharacteristic(UUIDS.OBD_CHAR);
+                
+                // Actualizar UI Exitoso
+                document.getElementById('bt-led').className = "w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]";
+                document.getElementById('bt-status-text').innerText = "V-LINK ONLINE";
+                document.getElementById('bt-status-text').classList.replace('text-slate-500', 'text-emerald-600');
+                btn.innerText = "✓ Sincronizado";
+                btn.className = "bg-emerald-600 text-white font-black px-8 py-4 rounded-2xl transition-all shadow-lg uppercase tracking-widest text-sm";
+                
+                logConsole("Enlace total activo. Listo para leer PIDs.");
+                
+                // Simulación de lectura de voltaje inicial
+                document.getElementById('voltage-val').innerText = "12.6V";
+                document.getElementById('protocol-val').innerText = "ISO 9141-2 (VW)";
+
+            } catch (error) {
+                logConsole(`Error: ${error.message}`);
+                alert("Carnal, asegúrate de que el Bluetooth esté prendido y que el vLink esté conectado al carro.");
+                btn.innerText = "📡 Reintentar Sincro";
+            }
         }
 
-        // Simular actividad inicial
-        setTimeout(() => {
-            logAction("Analizando flujo de ventas Nivel Premium...");
-        }, 1500);
-        
-        setTimeout(() => {
-            logAction("Optimizando base de datos de diagramas diésel...");
-        }, 3000);
+        function logConsole(msg) {
+            const box = document.getElementById('console-output');
+            const time = new Date().toLocaleTimeString([], { hour12: false });
+            box.innerHTML += `<br>> [${time}] ${msg}`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').innerHTML = "> Terminal limpia...";
+        }
+
+        // --- CHART INIT ---
+        window.onload = function() {
+            const ctx = document.getElementById('capabilitiesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: capabilitiesData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { weight: 'bold' } } }
+                    }
+                }
+            });
+        };
     </script>
 </body>
 </html>
