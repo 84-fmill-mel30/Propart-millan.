@@ -2,265 +2,367 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propart Diagnostic Master V3.0 | JULS & MILLAN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PROPART MASTER HUB V2.5 | QUANTUM</title>
+    <!-- Arsenal Tecnológico Master -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            height: 350px; 
-            max-height: 400px; 
+        :root { --neon: #22d3ee; --bg: #020617; --card: #0f172a; --amber: #fbbf24; --emerald: #10b981; }
+        body { 
+            background-color: var(--bg); 
+            color: #f8fafc; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            overflow: hidden; 
+            height: 100vh;
+            margin: 0;
         }
-        .console-box {
-            font-family: 'Courier New', Courier, monospace;
-            background: #020617;
-            color: #22d3ee;
-            border: 1px solid #1e293b;
+        
+        .glass { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 1.5rem; 
         }
-        .premium-border {
-            border: 2px solid transparent;
-            background: linear-gradient(white, white) padding-box,
-                        linear-gradient(to right, #2563eb, #fbbf24) border-box;
+        
+        .active-tab { 
+            background: rgba(34, 211, 238, 0.1); 
+            border-bottom: 3px solid var(--neon); 
+            color: var(--neon); 
         }
+        
+        /* Visor Holográfico 3D */
+        #hologram-viewport {
+            width: 100%;
+            height: 380px;
+            cursor: grab;
+            background: radial-gradient(circle at center, rgba(34, 211, 238, 0.15) 0%, transparent 85%);
+            touch-action: none;
+            border-radius: 1.5rem;
+        }
+        #hologram-viewport:active { cursor: grabbing; }
+
+        /* Botón de Sincronización Real */
+        .btn-vlink { 
+            background: var(--emerald); 
+            color: white; 
+            font-weight: 900; 
+            box-shadow: 0 4px 25px rgba(16, 185, 129, 0.4); 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .btn-vlink:active { transform: scale(0.95); filter: brightness(0.85); }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        
+        @keyframes pulse-neon { 
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px var(--neon)); } 
+            50% { opacity: 0.5; } 
+        }
+        .status-ia { 
+            animation: pulse-neon 2s infinite; 
+            color: var(--neon); 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            font-size: 11px; 
+            letter-spacing: 3px; 
+        }
+        
+        .terminal-bg { background: rgba(0,0,0,0.85); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.2rem; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="flex flex-col select-none">
 
-    <!-- Nav Master -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
-                    <div class="bg-blue-600 text-white font-black px-2 py-1 rounded text-xs">PRO</div>
-                    <span class="text-xl font-black text-slate-800 tracking-tighter uppercase">PROPART <span class="text-blue-600">MILLÁN</span></span>
-                </div>
-                <div class="flex gap-4">
-                    <div id="bt-status-pill" class="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                        <div id="bt-led" class="w-2 h-2 bg-slate-400 rounded-full"></div>
-                        <span id="bt-status-text" class="text-[10px] font-bold text-slate-500 uppercase">Scanner Offline</span>
-                    </div>
-                </div>
+    <!-- Header - Identidad Propart Master Hub -->
+    <header class="glass mx-3 mt-3 p-4 flex flex-col items-center border-b border-white/5 sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="px-3 py-1 bg-cyan-500 rounded-lg shadow-lg shadow-cyan-500/20 font-black text-black text-[10px] uppercase tracking-tighter">Propart Master Hub</div>
+            <div class="text-center">
+                <h1 class="text-2xl font-black tracking-tighter uppercase italic">Quantum <span class="text-cyan-400">V2.5</span></h1>
+                <p class="text-[10px] font-bold text-slate-500 tracking-[0.5em] uppercase">SOCIO: MILLÁN</p>
             </div>
         </div>
-    </nav>
+        
+        <!-- Navegación SPA -->
+        <nav class="flex mt-5 bg-slate-900/80 p-1 rounded-2xl border border-white/5 w-full max-w-md gap-1">
+            <button onclick="switchTab('dash')" id="tab-dash-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">Panel</button>
+            <button onclick="switchTab('scan')" id="tab-scan-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">Escáner</button>
+            <button onclick="switchTab('arch')" id="tab-arch-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 active-tab">Ingeniería 3D</button>
+        </nav>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <main class="flex-grow overflow-y-auto custom-scroll p-4 space-y-6">
 
-        <!-- Intro & Capabilities Section -->
-        <section id="section-intro" class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- SECCIÓN: INGENIERÍA 3D (Visor Three.js) -->
+        <section id="content-arch" class="tab-content block space-y-4 fade-in">
+            <div class="flex justify-between items-center px-2">
                 <div>
-                    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Ingeniería en Diagnóstico <br><span class="text-blue-600">Automotriz Especializado</span></h1>
-                    <p class="text-slate-600 mb-8 leading-relaxed">Socio Millán, esta versión V3.0 integra el motor de sincronización Bluetooth real para interfaces vLink y ELM327. Ya no es solo diseño, es potencia técnica.</p>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
-                            <span class="block text-xl font-bold text-blue-600">Nivel Plata</span>
-                            <span class="text-xs text-slate-500">Mantenimiento y diagnóstico básico.</span>
-                        </div>
-                        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100">
-                            <span class="block text-xl font-bold text-amber-600">Nivel Premium</span>
-                            <span class="text-xs text-slate-500">ECUs, 3D y Software avanzado.</span>
-                        </div>
-                    </div>
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-400 italic">Laboratorio Holográfico</h2>
+                    <p class="text-[9px] text-slate-600 font-bold uppercase tracking-tighter">Renderizado de Alta Resolución</p>
                 </div>
-                <div class="chart-container">
-                    <canvas id="capabilitiesChart"></canvas>
+                <span class="status-ia">AI PROJECTION ACTIVE</span>
+            </div>
+
+            <!-- Viewport de Three.js -->
+            <div class="glass overflow-hidden relative border border-cyan-500/20 shadow-2xl">
+                <div id="hologram-viewport"></div>
+                <div class="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
+                    <p id="proj-name" class="text-sm font-black text-white uppercase tracking-[0.4em] drop-shadow-lg italic">Iniciando...</p>
+                    <p class="text-[10px] text-cyan-400/70 mt-1 italic uppercase font-bold tracking-[0.2em]">Usa el dedo para rotar el esquema</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Bluetooth Scanner Section (The Fix) -->
-        <section id="section-scanner" class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-            <div class="relative z-10">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <!-- Selector de Proyectos de Millán -->
+            <div class="grid grid-cols-1 gap-3">
+                <div onclick="update3D('generator')" class="glass p-5 flex justify-between items-center border-l-4 border-cyan-500 active:scale-95 transition-all cursor-pointer group">
                     <div>
-                        <h2 class="text-2xl font-bold flex items-center gap-2">
-                            <span>🔍</span> MÓDULO DE SINCRONIZACIÓN BT
-                        </h2>
-                        <p class="text-slate-400 text-sm mt-1">Detecta interfaces vLink, OBDII y ELM327 en tiempo real.</p>
+                        <h4 class="font-bold text-xs group-hover:text-cyan-400 transition-colors uppercase">Generador de Luz Máster</h4>
+                        <p class="text-[9px] text-slate-500 mt-1 font-bold uppercase tracking-tighter">Bobinado C.A./C.D. y Campos</p>
                     </div>
-                    <button id="btn-sync" onclick="syncScanner()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black px-8 py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm">
-                        📡 Sincronizar Scanner
-                    </button>
+                    <i class="fas fa-atom text-cyan-500 text-xl"></i>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Dashboard Mini -->
-                    <div class="lg:col-span-1 space-y-4">
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Protocolo Detectado</span>
-                            <div id="protocol-val" class="text-xl font-mono text-emerald-400 mt-1">-- --- --</div>
-                        </div>
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Voltaje Batería</span>
-                            <div id="voltage-val" class="text-3xl font-mono text-white mt-1">0.0V</div>
-                        </div>
+                <div onclick="update3D('iron')" class="glass p-5 flex justify-between items-center border-l-4 border-amber-500 active:scale-95 transition-all cursor-pointer group">
+                    <div>
+                        <h4 class="font-bold text-xs group-hover:text-amber-500 transition-colors uppercase">Cautín Digital Regulable</h4>
+                        <p class="text-[9px] text-slate-500 mt-1 font-bold uppercase tracking-tighter">Control Térmico y Micro-chip</p>
                     </div>
-                    <!-- Real Console -->
-                    <div class="lg:col-span-2 flex flex-col">
-                        <div class="bg-black/50 border border-white/10 rounded-t-2xl px-4 py-2 flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase">Terminal de Datos Propart</span>
-                            <button onclick="clearConsole()" class="text-[10px] text-blue-400 font-bold uppercase">Limpiar</button>
-                        </div>
-                        <div id="console-output" class="console-box flex-grow h-48 rounded-b-2xl p-4 overflow-y-auto text-xs leading-relaxed">
-                            > Sistema inicializado...<br>
-                            > Esperando orden del socio Millán...
-                        </div>
+                    <i class="fas fa-fire text-amber-500 text-xl"></i>
+                </div>
+                <div onclick="update3D('canbus')" class="glass p-5 flex justify-between items-center border-l-4 border-emerald-500 active:scale-95 transition-all cursor-pointer group">
+                    <div>
+                        <h4 class="font-bold text-xs group-hover:text-emerald-500 transition-colors uppercase">Analizador Bus CAN</h4>
+                        <p class="text-[9px] text-slate-500 mt-1 font-bold uppercase tracking-tighter">Análisis de Tramas y Nodos</p>
                     </div>
+                    <i class="fas fa-network-wired text-emerald-500 text-xl"></i>
                 </div>
             </div>
         </section>
 
-        <!-- Project Lab (From Screenshot 4) -->
-        <section id="section-lab" class="space-y-6">
-            <div class="flex items-center gap-4">
-                <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Laboratorio de Proyectos</h2>
-                <div class="h-px flex-grow bg-slate-200"></div>
-                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Electromecánica IA</span>
+        <!-- SECCIÓN: ESCÁNER (La Lupa Bluetooth) -->
+        <section id="content-scan" class="tab-content hidden space-y-4 fade-in">
+            <div class="glass p-8 border border-white/5 shadow-2xl text-center">
+                <h3 class="text-xs font-black text-cyan-400 uppercase tracking-[0.2em] mb-6">Enlace de Diagnóstico Propart</h3>
+                <button onclick="conectarScanner()" id="connectBtn" class="w-full py-5 btn-vlink rounded-3xl font-black text-xs uppercase flex items-center justify-center gap-3">
+                    <i class="fas fa-satellite-dish animate-pulse"></i> Sincronizar Interface vLink
+                </button>
+                <p class="text-[10px] text-slate-500 mt-4 font-bold italic uppercase tracking-tighter">Soporte Maestro: iOS, Android y PC Chrome</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
-                    <div class="text-3xl mb-4">💡</div>
-                    <h3 class="font-bold text-slate-900">Generador de Luz</h3>
-                    <p class="text-sm text-slate-500 mt-2">Planos y modelado para fabricación C.A./C.D.</p>
-                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Holograma</button>
+            <!-- Terminal de Ingeniería -->
+            <div class="terminal-bg p-6 flex flex-col h-80 overflow-hidden shadow-2xl border border-white/5">
+                <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                    <div class="flex items-center gap-3">
+                        <span id="term-led" class="w-2.5 h-2.5 rounded-full bg-slate-700 transition-all duration-300"></span>
+                        <span class="text-[10px] font-black text-cyan-400 uppercase tracking-tighter italic">Data Terminal Hub</span>
+                    </div>
+                    <button onclick="document.getElementById('console').innerHTML = ''" class="text-[10px] text-slate-400 hover:text-white font-bold uppercase transition-colors">Purgar</button>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
-                    <div class="text-3xl mb-4">🌡️</div>
-                    <h3 class="font-bold text-slate-900">Cautín Regulable</h3>
-                    <p class="text-sm text-slate-500 mt-2">Control digital de temperatura por Micro-chip.</p>
-                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Esquema</button>
+                <div id="console" class="flex-grow font-mono text-[11px] text-cyan-300 overflow-y-auto custom-scroll space-y-2">
+                    <div class="text-slate-600 italic font-bold uppercase">> Sistema Quantum V2.5 Listo. Esperando socio Millán...</div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 hover:shadow-md transition-shadow">
-                    <div class="text-3xl mb-4">📡</div>
-                    <h3 class="font-bold text-slate-900">Analizador Bus CAN</h3>
-                    <p class="text-sm text-slate-500 mt-2">Intercepción de mensajes de red en tiempo real.</p>
-                    <button class="mt-4 text-blue-600 font-bold text-xs uppercase tracking-widest">Ver Trama</button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="btSend('010C')" class="glass py-4 text-[10px] font-black text-slate-400 uppercase border border-white/5 active:bg-cyan-500/10 transition-all">Leer RPM</button>
+                <button onclick="btSend('0105')" class="glass py-4 text-[10px] font-black text-slate-400 uppercase border border-white/5 active:bg-cyan-500/10 transition-all">Temp. Motor</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: PANEL (Dashboard Premium) -->
+        <section id="content-dash" class="tab-content hidden space-y-4 fade-in">
+            <div class="glass p-8 border-l-4 border-amber-500 shadow-2xl">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase mb-4 tracking-widest text-center">Estado de Ingeniería</h3>
+                <span class="text-4xl block text-center font-black text-amber-500 italic uppercase drop-shadow-lg">MILLÁN PREMIUM</span>
+                <div class="w-full bg-slate-800 h-2 rounded-full mt-6 overflow-hidden">
+                    <div class="h-full bg-amber-500 w-full shadow-[0_0_15px_#fbbf24]"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-4 font-bold text-center uppercase tracking-widest italic tracking-tighter">Acceso Total Habilitado - Socio JULS</p>
+            </div>
+
+            <div class="glass p-6 border border-white/5">
+                <h4 class="text-[10px] font-black text-slate-500 uppercase mb-6 tracking-widest italic text-center">Eficiencia de Sincronización</h4>
+                <div class="h-64">
+                    <canvas id="statChart"></canvas>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-white border-t border-slate-200 py-10 mt-20">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-500 font-bold text-sm tracking-widest uppercase">PROPART DIAGNOSTIC © 2026</p>
-            <p class="text-slate-400 text-xs mt-2">Socio Tecnológico: JULS AI Specialist | Proyecciones 3D & Electromecánica</p>
+    <!-- Footer - Barra de Comandos Millán -->
+    <footer class="p-4 glass border-t border-white/5 sticky bottom-0 mx-3 mb-3">
+        <div class="flex gap-2 max-w-3xl mx-auto">
+            <input type="text" id="cmdInput" placeholder="Enviar comando AT o HEX..." class="flex-grow bg-slate-900 border border-slate-700 rounded-2xl px-5 py-3.5 text-white text-xs outline-none focus:ring-1 focus:ring-cyan-500 transition-all placeholder:text-slate-700 font-bold uppercase tracking-wider">
+            <button onclick="btSendInput()" class="bg-cyan-600 px-7 rounded-2xl flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-cyan-900/20">
+                <i class="fas fa-bolt text-black text-sm"></i>
+            </button>
         </div>
+        <p class="text-center text-[8px] font-bold text-slate-800 uppercase tracking-[0.5em] mt-5">
+            JULS AI SPECIALIST | PROPART DIAGNOSTIC © 2026
+        </p>
     </footer>
 
     <script>
-        // --- DATA HUB ---
-        const capabilitiesData = {
-            labels: ['Diagnóstico', 'Software', 'Electrónica', 'Diésel', 'Llaves', 'Asistencia'],
-            datasets: [
-                {
-                    label: 'Nivel Plata',
-                    data: [70, 45, 40, 60, 80, 50],
-                    backgroundColor: 'rgba(148, 163, 184, 0.2)',
-                    borderColor: '#94a3b8',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Nivel Premium',
-                    data: [100, 95, 90, 85, 100, 100],
-                    backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                    borderColor: '#2563eb',
-                    borderWidth: 3
-                }
-            ]
-        };
+        // --- MOTOR BLUETOOTH "JULS CORE" ---
+        let obdChar = null;
+        const MASTER_UUIDS = [
+            '0000fff0-0000-1000-8000-00805f9b34fb', // Standard vLink
+            '49535343-fe7d-4ae5-8fa9-9fafd205e455', // iOS vLink Protocol
+            '0000ffe0-0000-1000-8000-00805f9b34fb', // Serial BLE
+            '000018f0-0000-1000-8000-00805f9b34fb', // OBDII Generic
+            '00001101-0000-1000-8000-00805f9b34fb'  // Classic SPP
+        ];
 
-        // --- BLUETOOTH ENGINE ---
-        let bluetoothDevice = null;
-        let gattServer = null;
-        let diagnosticChar = null;
-
-        const UUIDS = {
-            OBD_SERVICE: '0000fff0-0000-1000-8000-00805f9b34fb', // Común en ELM327 BLE
-            OBD_CHAR: '0000fff1-0000-1000-8000-00805f9b34fb'
-        };
-
-        async function syncScanner() {
-            const consoleBox = document.getElementById('console-output');
-            const btn = document.getElementById('btn-sync');
-            
-            try {
-                logConsole("Iniciando búsqueda de dispositivos Bluetooth...");
-                
-                // Pedir dispositivo con el estándar OBDII
-                bluetoothDevice = await navigator.bluetooth.requestDevice({
-                    filters: [{ namePrefix: 'IOS-Vlink' }, { namePrefix: 'OBDII' }, { namePrefix: 'vLink' }],
-                    optionalServices: [UUIDS.OBD_SERVICE]
-                });
-
-                logConsole(`Conectando a: ${bluetoothDevice.name}...`);
-                btn.innerText = "Conectando...";
-                
-                gattServer = await bluetoothDevice.gatt.connect();
-                logConsole("Servidor GATT conectado.");
-                
-                // Buscar servicios
-                const service = await gattServer.getPrimaryService(UUIDS.OBD_SERVICE);
-                diagnosticChar = await service.getCharacteristic(UUIDS.OBD_CHAR);
-                
-                // Actualizar UI Exitoso
-                document.getElementById('bt-led').className = "w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]";
-                document.getElementById('bt-status-text').innerText = "V-LINK ONLINE";
-                document.getElementById('bt-status-text').classList.replace('text-slate-500', 'text-emerald-600');
-                btn.innerText = "✓ Sincronizado";
-                btn.className = "bg-emerald-600 text-white font-black px-8 py-4 rounded-2xl transition-all shadow-lg uppercase tracking-widest text-sm";
-                
-                logConsole("Enlace total activo. Listo para leer PIDs.");
-                
-                // Simulación de lectura de voltaje inicial
-                document.getElementById('voltage-val').innerText = "12.6V";
-                document.getElementById('protocol-val').innerText = "ISO 9141-2 (VW)";
-
-            } catch (error) {
-                logConsole(`Error: ${error.message}`);
-                alert("Carnal, asegúrate de que el Bluetooth esté prendido y que el vLink esté conectado al carro.");
-                btn.innerText = "📡 Reintentar Sincro";
-            }
-        }
-
-        function logConsole(msg) {
-            const box = document.getElementById('console-output');
+        function log(msg, type = 'sys') {
+            const consoleEl = document.getElementById('console');
             const time = new Date().toLocaleTimeString([], { hour12: false });
-            box.innerHTML += `<br>> [${time}] ${msg}`;
-            box.scrollTop = box.scrollHeight;
+            const prefix = type === 'tx' ? 'TX > ' : type === 'rx' ? 'RX < ' : 'SYS | ';
+            const color = type === 'tx' ? 'text-white font-bold' : type === 'rx' ? 'text-cyan-400 font-black' : 'text-slate-600';
+            consoleEl.innerHTML += `<div class="fade-in"><span class="text-slate-800 font-black">[${time}]</span> <span class="${color}">${prefix}${msg}</span></div>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
         }
 
-        function clearConsole() {
-            document.getElementById('console-output').innerHTML = "> Terminal limpia...";
-        }
-
-        // --- CHART INIT ---
-        window.onload = function() {
-            const ctx = document.getElementById('capabilitiesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: capabilitiesData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: { display: false }
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { weight: 'bold' } } }
-                    }
+        async function conectarScanner() {
+            const btn = document.getElementById('connectBtn');
+            try {
+                log("Rastreando interface Propart Bluetooth...");
+                btn.innerHTML = "SINCRONIZANDO...";
+                const device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: MASTER_UUIDS });
+                
+                log(`Socio Millán, vinculado con: ${device.name}`);
+                const server = await device.gatt.connect();
+                const services = await server.getPrimaryServices();
+                
+                for (const s of services) {
+                    const chars = await s.getCharacteristics();
+                    for (const c of chars) { if (c.properties.write || c.properties.notify) { obdChar = c; break; } }
+                    if (obdChar) break;
                 }
+
+                if (!obdChar) throw new Error("Interface incompatible.");
+
+                if (obdChar.properties.notify) {
+                    await obdChar.startNotifications();
+                    obdChar.addEventListener('characteristicvaluechanged', (e) => { 
+                        const val = new TextDecoder().decode(e.target.value).trim();
+                        if(val) log(val, 'rx'); 
+                    });
+                }
+
+                document.getElementById('term-led').className = "w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]";
+                btn.innerHTML = "✓ CONECTADO"; btn.style.background = "#059669";
+                
+                log("Enlace establecido. Enviando ATZ.");
+                await btSend("ATZ", 800); await btSend("ATSP0", 200);
+            } catch (err) { log(`FALLO: ${err.message}`); btn.innerHTML = "📡 REINTENTAR BUSQUEDA"; }
+        }
+
+        async function btSend(cmd, wait = 0) {
+            if (!obdChar) return;
+            try {
+                // El ELM327 requiere retorno de carro \r
+                await obdChar.writeValue(new TextEncoder().encode(cmd + "\r"));
+                log(cmd, 'tx');
+                if (wait > 0) await new Promise(r => setTimeout(r, wait));
+            } catch (e) { log("Error de canal de datos."); }
+        }
+
+        function btSendInput() {
+            const input = document.getElementById('cmdInput');
+            if (input.value) { btSend(input.value.toUpperCase()); input.value = ""; }
+        }
+
+        // --- LÓGICA DE NAVEGACIÓN ---
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+            document.getElementById(`content-${id}`).classList.remove('hidden');
+            document.getElementById(`tab-${id}-btn`).classList.add('active-tab');
+        }
+
+        // --- MOTOR 3D HOLOGRÁFICO (Three.js) ---
+        let scene, camera, renderer, currentObject;
+        let isMouseDown = false;
+
+        function initThreeJS() {
+            const viewport = document.getElementById('hologram-viewport');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, viewport.clientWidth / viewport.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            viewport.appendChild(renderer.domElement);
+
+            const pLight = new THREE.PointLight(0x22d3ee, 5, 100); pLight.position.set(10, 10, 10);
+            scene.add(pLight); scene.add(new THREE.AmbientLight(0x404040, 1.5));
+            camera.position.z = 5;
+
+            // Interacción táctil y mouse
+            viewport.addEventListener('mousedown', () => isMouseDown = true);
+            window.addEventListener('mouseup', () => isMouseDown = false);
+            viewport.addEventListener('mousemove', (e) => {
+                if (isMouseDown && currentObject) {
+                    currentObject.rotation.y += e.movementX * 0.01;
+                    currentObject.rotation.x += e.movementY * 0.01;
+                }
+            });
+            viewport.addEventListener('touchmove', (e) => {
+                if (e.touches[0] && currentObject) {
+                    currentObject.rotation.y += 0.05;
+                }
+            });
+
+            animate();
+            update3D('generator'); 
+        }
+
+        function update3D(type) {
+            if (currentObject) scene.remove(currentObject);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.8, 
+                emissive: 0x22d3ee, emissiveIntensity: 0.6 
+            });
+            let geometry; const nameLabel = document.getElementById('proj-name');
+            
+            if (type === 'generator') {
+                geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 160, 20); nameLabel.innerText = "Generador de Luz Máster";
+            } else if (type === 'iron') {
+                geometry = new THREE.CylinderGeometry(0.3, 0.9, 4.5, 32); nameLabel.innerText = "Cautín Máster Digital";
+                material.color.setHex(0xfbbf24); material.emissive.setHex(0xfbbf24);
+            } else if (type === 'canbus') {
+                geometry = new THREE.IcosahedronGeometry(2.3, 1); nameLabel.innerText = "Nodo Analizador Bus CAN";
+                material.color.setHex(0x10b981); material.emissive.setHex(0x10b981);
+            }
+            
+            currentObject = new THREE.Mesh(geometry, material); scene.add(currentObject);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (currentObject && !isMouseDown) currentObject.rotation.y += 0.015;
+            renderer.render(scene, camera);
+        }
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            initThreeJS();
+            const ctx = document.getElementById('statChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['S1', 'S2', 'S3', 'S4', 'S5'],
+                    datasets: [{
+                        label: 'Sync Success',
+                        data: [75, 88, 82, 95, 100],
+                        borderColor: '#22d3ee', backgroundColor: 'rgba(34, 211, 238, 0.15)', tension: 0.4, fill: true, borderWidth: 3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#334155', font: { weight: 'bold' } } } } }
             });
         };
     </script>
