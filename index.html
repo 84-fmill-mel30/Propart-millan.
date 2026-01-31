@@ -499,104 +499,6 @@
 
 </script>
 </body>
-</html>/ --- COPIAR DESDE AQUÍ PARA REEMPLAZAR EN TU CÓDIGO ---
-
-// 1. Lista Maestra de UUIDs (Asegura que encuentre el vLink en iOS/Android/PC)
-const BT_UUIDS = [
-    'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // vGate / vLink
-    '0000fff0-0000-1000-8000-00805f9b34fb', // ELM327 BLE estándar
-    '0000ffe0-0000-1000-8000-00805f9b34fb', // Serial Genérico / HM-10
-    '49535343-fe7d-4ae5-8fa9-9fafd205e455'  // vLink específico para iOS
-];
-
-let device, server, char;
-let isBusy = false; // Flag para evitar que los comandos se encimen y traben el vLink
-
-// 2. Función de Conexión Robusta (La que sí conectó)
-async function conectarScanner() {
-    try {
-        console.log("Buscando Scanner con motor Propart...");
-        // Intentamos el enlace pidiendo todos los servicios opcionales conocidos
-        device = await navigator.bluetooth.requestDevice({
-            acceptAllDevices: true,
-            optionalServices: BT_UUIDS
-        });
-
-        // Evento por si se desconecta solo
-        device.addEventListener('gattserverdisconnected', () => {
-            document.getElementById('connection-led').classList.remove('on');
-            document.getElementById('conn-status').innerText = "OFFLINE";
-        });
-
-        server = await device.gatt.connect();
-        
-        // BÚSQUEDA INTELIGENTE: Escaneamos todos los servicios del dispositivo 
-        // para encontrar el canal de datos sin importar cómo se llame.
-        const services = await server.getPrimaryServices();
-        for(let s of services) {
-            const chars = await s.getCharacteristics();
-            for(let c of chars) {
-                // Buscamos la característica que permita escribir o notificar
-                if(c.properties.notify || c.properties.write) {
-                    char = c; 
-                    break;
-                }
-            }
-            if(char) break;
-        }
-
-        if(!char) throw "No se halló canal de datos en el vLink.";
-
-        // Iniciamos el flujo de datos
-        await char.startNotifications();
-        char.addEventListener('characteristicvaluechanged', handleData);
-        
-        // Actualizamos UI (Asegúrate que estos IDs existan en tu HTML)
-        if(document.getElementById('connection-led')) document.getElementById('connection-led').classList.add('on');
-        if(document.getElementById('conn-status')) document.getElementById('conn-status').innerText = "ONLINE";
-
-        // SECUENCIA DE ARRANQUE CRÍTICA
-        await enviar("AT Z", 1000); // Reset
-        await enviar("AT E0", 200); // Eco Off
-        
-        if(currentProtocol === 'VW') {
-            await enviar("AT SP 3", 200);   // Protocolo ISO 9141-2
-            await enviar("AT IIA 33", 200); // Dirección ECU Motor VW
-        } else {
-            await enviar("AT SP 0", 200);   // Protocolo Auto
-        }
-        
-        console.log("Conexión establecida exitosamente.");
-
-    } catch (err) {
-        console.error("Fallo de motor Bluetooth:", err);
-        alert("Socio, hubo un detalle en la conexión: " + err);
-    }
-}
-
-// 3. Función de Envío Seguro (Evita saturar el buffer del scanner)
-async function enviar(cmd, wait = 0) {
-    if(!char || isBusy) return;
-    isBusy = true;
-    try {
-        const encoder = new TextEncoder();
-        await char.writeValue(encoder.encode(cmd + "\r"));
-        // Si el comando requiere esperar respuesta (como el reset), le damos su tiempo
-        if(wait > 0) await new Promise(r => setTimeout(r, wait));
-    } catch(e) {
-        console.error("Error al enviar comando:", e);
-    }
-    isBusy = false;
-}
-
-// --- TERMINA BLOQUE DE CONEXIÓN ---
-```eof
-
-                for (const service of services) {
-                    log(`Analizando servicio: ${service.uuid.substring(0,8)}...`);
-                    const chars = await service.getCharacteristics();
-                    for (const char of chars) {
-                        if (char.properties.write || char.properties.notify) {
                             obdChar = char;
                             break;
                         }
@@ -661,4 +563,3 @@ async function enviar(cmd, wait = 0) {
     </script>
 </body>
 </html>
-```
