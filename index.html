@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,445 +6,467 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#000000">
-    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/car-battery.png">
-    <title>PROPART SYSTEM ML - FERNANDO MILLÁN</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0e27">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/engine.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/engine.png">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBST1BBUlQgRElBR05PU1RJQyBNTCIsCiAgInNob3J0X25hbWUiOiAiUFJPUEFSVCIsCiAgImRlc2NyaXB0aW9uIjogIlNpc3RlbWEgUHJvZmVzaW9uYWwgZGUgRGlhZ27Ds3N0aWNvIC0gRmVybmFuZG8gTWlsbMOhbiIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGEwZTI3IiwKICAidGhlbWVfY29sb3IiOiAiIzBhMGUyNyIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vaW1nLmljb25zOC5jb20vZmx1ZW5jeS8xOTIvZW5naW5lLnBuZyIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2ltZy5pY29uczguY29tL2ZsdWVuY3kvNTEyL2VuZ2luZS5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <title>PROPART DIAGNOSTIC ML</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
         
-        :root { --brand: #2563eb; --dark: #020617; }
+        :root { 
+            --primary: #00d4ff; 
+            --secondary: #ff0080;
+            --dark: #0a0e27;
+            --card: #131829;
+            --border: #1e2439;
+        }
         
-        body { background-color: #000; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        .font-mono { font-family: 'Roboto Mono', monospace; }
-        .app-header { background: linear-gradient(180deg, #0f172a 0%, #020617 100%); border-bottom: 2px solid var(--brand); box-shadow: 0 4px 15px rgba(37,99,235,0.2); }
-        .btn-main { background: #0f172a; border: 1px solid #1e293b; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .btn-main:active { transform: scale(0.96); border-color: var(--brand); background: #1e1b4b; }
-        .card { background: #0a0a0a; border: 1px solid #1f2937; border-left: 4px solid #3b82f6; padding: 10px; margin-bottom: 6px; border-radius: 4px; }
-        .console { background: #000; border: 1px solid #333; height: 150px; overflow-y: auto; padding: 8px; font-family: 'Roboto Mono', monospace; font-size: 10px; color: #22c55e; box-shadow: inset 0 0 10px #000; }
-        input, select { background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; outline: none; text-transform: uppercase; font-weight: bold; }
-        input:focus, select:focus { border-color: var(--brand); }
-        .admin-view { display: none; }
-        .show-admin .admin-view { display: flex; }
-        .hidden { display: none !important; }
-        .no-scroll::-webkit-scrollbar { display: none; }
-        .filter-btn { background: #1e293b; color: #94a3b8; }
-        .filter-btn.active { background: #1e40af; color: white; }
+        * { -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e2e8f0; 
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .glass {
+            background: rgba(19, 24, 41, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(0,212,255,0.4), 0 0 40px rgba(0,212,255,0.2);
+        }
+        
+        .glow-red {
+            box-shadow: 0 0 20px rgba(255,0,128,0.4), 0 0 40px rgba(255,0,128,0.2);
+        }
+        
+        .header-pro {
+            background: linear-gradient(180deg, rgba(19,24,41,0.98) 0%, rgba(10,14,39,0.95) 100%);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(0,212,255,0.2);
+        }
+        
+        .btn-pro {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border: 1px solid rgba(0,212,255,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-pro:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 25px rgba(0,212,255,0.6);
+        }
+        
+        .card-sensor {
+            background: linear-gradient(135deg, rgba(30,58,138,0.3) 0%, rgba(30,64,175,0.2) 100%);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+        
+        .card-sensor:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,212,255,0.3);
+        }
+        
+        .data-display {
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .console-pro {
+            background: #000;
+            border: 2px solid var(--border);
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #00ff00;
+            height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 20px rgba(0,255,0,0.1);
+        }
+        
+        input, select {
+            background: rgba(19,24,41,0.8);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,212,255,0.3);
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .grid-sensors {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .footer-brand {
+            background: linear-gradient(180deg, rgba(10,14,39,0.95) 0%, rgba(19,24,41,0.98) 100%);
+            border-top: 1px solid rgba(0,212,255,0.2);
+            padding: 8px 0;
+            text-align: center;
+        }
+        
+        .status-online { 
+            width: 8px; 
+            height: 8px; 
+            background: #22c55e; 
+            border-radius: 50%; 
+            animation: blink 1.5s infinite;
+            box-shadow: 0 0 8px #22c55e;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .injector-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        .coil-pulse {
+            animation: coilPulse 0.5s ease-in-out;
+        }
+        
+        @keyframes coilPulse {
+            0%, 100% { background: rgba(34,197,94,0.3); }
+            50% { background: rgba(34,197,94,0.8); }
+        }
     </style>
 </head>
 <body class="flex flex-col h-screen">
 
-    <div class="app-header p-3 flex justify-between items-center z-50">
+    <!-- HEADER PROFESIONAL -->
+    <div class="header-pro p-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-3" onclick="goHome()">
-            <div class="bg-blue-700 w-10 h-10 rounded flex items-center justify-center text-white font-bold text-lg border border-blue-400">ML</div>
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center glow">
+                <i class="fa-solid fa-microchip text-white text-xl"></i>
+            </div>
             <div>
-                <h1 class="font-bold text-sm text-white leading-none tracking-widest">PROPART SYSTEM</h1>
-                <p class="text-[9px] text-blue-400 font-bold tracking-wider">TALLER FERNANDO MILLÁN</p>
+                <h1 class="orbitron font-black text-base text-white tracking-wider leading-none">PROPART</h1>
+                <p class="text-[10px] text-cyan-400 font-bold tracking-widest">DIAGNOSTIC SYSTEM</p>
             </div>
         </div>
-        <div class="flex gap-4">
-            <button onclick="toggleBluetooth()" id="bt-icon" class="text-gray-500 hover:text-white"><i class="fa-brands fa-bluetooth-b text-xl"></i></button>
-            <button onclick="verCarrito()" class="relative text-white">
-                <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span id="badge-cart" class="absolute -top-2 -right-2 bg-red-600 text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+        <div class="flex gap-3 items-center">
+            <button onclick="installPWA()" id="install-btn" class="hidden bg-green-600 px-3 py-1.5 rounded-lg text-[10px] font-bold">
+                <i class="fa-solid fa-download mr-1"></i>INSTALAR
+            </button>
+            <button onclick="toggleBT()" id="bt-icon" class="text-gray-500 hover:text-cyan-400 transition">
+                <i class="fa-brands fa-bluetooth-b text-2xl"></i>
+            </button>
+            <button onclick="verCarrito()" class="relative">
+                <i class="fa-solid fa-cart-shopping text-white text-xl"></i>
+                <span id="badge-cart" class="absolute -top-2 -right-2 bg-red-500 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
             </button>
         </div>
     </div>
 
-    <div id="main-container" class="flex-1 overflow-y-auto p-3 relative bg-[#050505]">
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div id="main-container" class="flex-1 overflow-y-auto p-4">
 
+        <!-- HOME -->
         <div id="view-home">
-            <h2 class="text-gray-500 text-[10px] font-bold mb-4 uppercase tracking-[0.2em] border-b border-gray-800 pb-1">CENTRO DE MANDO</h2>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="nav('scanner')" class="btn-main group">
-                    <i class="fa-solid fa-laptop-code text-3xl text-blue-500 mb-2 group-active:scale-110 transition"></i>
-                    <span class="text-[10px] font-bold text-white tracking-widest">SCANNER OBD2</span>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="nav('scanner')" class="btn-pro p-6 rounded-xl group">
+                    <i class="fa-solid fa-chart-line text-4xl text-cyan-400 mb-3 group-active:scale-110 transition"></i>
+                    <div class="text-xs font-bold text-white">DIAGNÓSTICO</div>
+                    <div class="text-[9px] text-gray-400">OBD2 AVANZADO</div>
                 </button>
-                <button onclick="nav('inventory')" class="btn-main group">
-                    <i class="fa-solid fa-boxes-stacked text-3xl text-green-500 mb-2 group-active:scale-110 transition"></i>
-                    <span class="text-[10px] font-bold text-white tracking-widest">REFACCIONARIA</span>
+                <button onclick="nav('inventory')" class="btn-pro p-6 rounded-xl group">
+                    <i class="fa-solid fa-warehouse text-4xl text-green-400 mb-3 group-active:scale-110 transition"></i>
+                    <div class="text-xs font-bold text-white">REFACCIONES</div>
+                    <div class="text-[9px] text-gray-400">INVENTARIO</div>
                 </button>
-                <button onclick="nav('soft')" class="btn-main group">
-                    <i class="fa-solid fa-book-open-reader text-3xl text-yellow-500 mb-2 group-active:scale-110 transition"></i>
-                    <span class="text-[10px] font-bold text-white tracking-widest">DATOS TÉCNICOS</span>
+                <button onclick="nav('soft')" class="btn-pro p-6 rounded-xl group">
+                    <i class="fa-solid fa-database text-4xl text-yellow-400 mb-3 group-active:scale-110 transition"></i>
+                    <div class="text-xs font-bold text-white">DATOS TÉCNICOS</div>
+                    <div class="text-[9px] text-gray-400">ESPECIFICACIONES</div>
                 </button>
-                <button onclick="loginAdmin()" class="btn-main group">
-                    <i class="fa-solid fa-user-gear text-3xl text-red-500 mb-2 group-active:scale-110 transition"></i>
-                    <span class="text-[10px] font-bold text-white tracking-widest">ADMINISTRAR</span>
+                <button onclick="loginAdmin()" class="btn-pro p-6 rounded-xl group">
+                    <i class="fa-solid fa-user-gear text-4xl text-purple-400 mb-3 group-active:scale-110 transition"></i>
+                    <div class="text-xs font-bold text-white">ADMINISTRAR</div>
+                    <div class="text-[9px] text-gray-400">CONFIGURACIÓN</div>
                 </button>
             </div>
-            
-            <div class="mt-6 border border-slate-800 bg-slate-900/50 p-4 rounded-lg">
-                <h3 class="text-blue-400 font-bold text-xs mb-2">ESTADO DEL SISTEMA</h3>
-                <div class="flex justify-between text-xs text-gray-400 font-mono">
-                    <span>LICENCIA:</span> <span class="text-green-400">ACTIVA</span>
+
+            <div class="glass rounded-xl p-4">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="status-online"></div>
+                    <h3 class="orbitron text-cyan-400 font-bold text-sm">ESTADO DEL SISTEMA</h3>
                 </div>
-                <div class="flex justify-between text-xs text-gray-400 font-mono mt-1">
-                    <span>PROPIETARIO:</span> <span class="text-white">FERNANDO MILLÁN</span>
-                </div>
-                <div class="flex justify-between text-xs text-gray-400 font-mono mt-1">
-                    <span>BASE DATOS:</span> <span>V40 PRODUCTION</span>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">LICENCIA:</span>
+                        <span class="text-green-400 font-bold">✓ ACTIVA PRO</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">PROPIETARIO:</span>
+                        <span class="text-white font-bold">FERNANDO MILLÁN</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">BASE DE DATOS:</span>
+                        <span class="text-cyan-400 font-mono">V5.0 CLOUD</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-scanner" class="hidden">
-            <div class="bg-slate-900 p-3 rounded border border-slate-700 mb-3 shadow-lg">
-                <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-white font-bold text-xs"><i class="fa-solid fa-link text-green-500"></i> INTERFAZ VCI</h2>
-                    <span id="conn-status" class="text-[9px] bg-red-900 text-red-200 px-2 py-1 rounded">DESCONECTADO</span>
+        <!-- SCANNER AVANZADO -->
+        <div id="view-scanner" class="hidden pb-20">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-700 mb-4 overflow-x-auto">
+                <button class="tab-btn active" onclick="switchTab('live')">EN VIVO</button>
+                <button class="tab-btn" onclick="switchTab('injectors')">INYECTORES</button>
+                <button class="tab-btn" onclick="switchTab('coils')">BOBINAS</button>
+                <button class="tab-btn" onclick="switchTab('throttle')">TPS CALIBRAR</button>
+            </div>
+
+            <!-- Conexión -->
+            <div class="glass rounded-xl p-4 mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="orbitron text-white font-bold text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-wifi text-cyan-400"></i> INTERFAZ ELM327
+                    </h3>
+                    <span id="conn-status" class="text-[9px] px-3 py-1 rounded-full bg-red-900 text-red-200 font-bold">DESCONECTADO</span>
                 </div>
-                <button onclick="connectOBD()" id="btn-connect" class="w-full bg-blue-700 text-white py-3 rounded font-bold text-xs shadow hover:bg-blue-600 transition">
-                    BUSCAR DISPOSITIVO BLUETOOTH (BLE)
+                <button onclick="connectOBD()" id="btn-connect" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-3 rounded-lg font-bold text-xs glow">
+                    <i class="fa-brands fa-bluetooth mr-2"></i>BUSCAR DISPOSITIVO BLUETOOTH
                 </button>
             </div>
 
-            <div class="mb-3">
-                <div class="flex justify-between text-[10px] text-gray-500 mb-1 font-bold">
-                    <span>FLUJO DE DATOS (LIVE)</span>
-                    <span>PROTOCOL: ISO 15765-4 CAN</span>
+            <!-- TAB: EN VIVO -->
+            <div id="tab-live">
+                <div class="grid-sensors mb-4">
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">RPM MOTOR</div>
+                        <div id="val-rpm" class="data-display text-cyan-400 orbitron">0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">TEMP ECT</div>
+                        <div id="val-temp" class="data-display text-orange-400 orbitron">0°C</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">MAF (g/s)</div>
+                        <div id="val-maf" class="data-display text-green-400 orbitron">0.0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">MAP (kPa)</div>
+                        <div id="val-map" class="data-display text-yellow-400 orbitron">0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">APP1 (%)</div>
+                        <div id="val-app1" class="data-display text-purple-400 orbitron">0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">APP2 (%)</div>
+                        <div id="val-app2" class="data-display text-pink-400 orbitron">0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">CKP (Hz)</div>
+                        <div id="val-ckp" class="data-display text-red-400 orbitron">0</div>
+                    </div>
+                    <div class="card-sensor p-3 rounded-xl">
+                        <div class="text-[9px] text-gray-400 mb-1">VOLTAJE</div>
+                        <div id="val-volt" class="data-display text-blue-400 orbitron">0.0V</div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="bg-black border border-slate-800 p-3 rounded text-center">
-                        <div class="text-[10px] text-gray-400">RPM MOTOR</div>
-                        <div id="val-rpm" class="text-2xl font-bold text-green-400 font-mono">0</div>
-                    </div>
-                    <div class="bg-black border border-slate-800 p-3 rounded text-center">
-                        <div class="text-[10px] text-gray-400">TEMP. REFRIG (ECT)</div>
-                        <div id="val-temp" class="text-2xl font-bold text-red-400 font-mono">0 °C</div>
-                    </div>
-                    <div class="bg-black border border-slate-800 p-3 rounded text-center">
-                        <div class="text-[10px] text-gray-400">VOLTAJE BATT</div>
-                        <div id="val-volt" class="text-2xl font-bold text-yellow-400 font-mono">0.0 V</div>
-                    </div>
-                    <div class="bg-black border border-slate-800 p-3 rounded text-center">
-                        <div class="text-[10px] text-gray-400">SENSOR O2 B1S1</div>
-                        <div id="val-o2" class="text-2xl font-bold text-blue-400 font-mono">0.00 V</div>
+
+                <div class="glass rounded-xl p-3">
+                    <div class="text-[9px] text-gray-400 mb-2 font-bold">CONSOLA DE DATOS</div>
+                    <div id="terminal" class="console-pro p-2 rounded">
+                        <div class="text-green-500">&gt; ESPERANDO CONEXIÓN...</div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <p class="text-[9px] text-gray-500 mb-1 font-bold">CONSOLA DE COMANDOS (HEX)</p>
-                <div id="terminal" class="console">
-                    <div class="text-gray-500">> ESPERANDO CONEXIÓN...</div>
+            <!-- TAB: INYECTORES -->
+            <div id="tab-injectors" class="hidden">
+                <div class="glass rounded-xl p-4 mb-3">
+                    <h3 class="orbitron text-cyan-400 font-bold text-sm mb-4">MONITOR DE INYECTORES</h3>
+                    <div class="space-y-3">
+                        <div class="injector-item" id="inj-1">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-300">INYECTOR 1</span>
+                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="injector-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="injector-item" id="inj-2">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-300">INYECTOR 2</span>
+                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="injector-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="injector-item" id="inj-3">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-300">INYECTOR 3</span>
+                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="injector-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="injector-item" id="inj-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-300">INYECTOR 4</span>
+                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="injector-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-yellow-900/20 border border-yellow-600/30 rounded-xl p-3 text-xs text-yellow-300">
+                    <i class="fa-solid fa-info-circle mr-2"></i>
+                    <strong>NOTA:</strong> El ancho de pulso normal en ralentí es de 2-4 ms. Valores muy altos pueden indicar inyectores sucios.
+                </div>
+            </div>
+
+            <!-- TAB: BOBINAS -->
+            <div id="tab-coils" class="hidden">
+                <div class="glass rounded-xl p-4">
+                    <h3 class="orbitron text-cyan-400 font-bold text-sm mb-4">MONITOR DE BOBINAS</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div id="coil-1" class="coil-card p-4 bg-gray-800/50 rounded-xl border border-gray-700 text-center">
+                            <div class="text-lg font-bold mb-1 orbitron">BOBINA 1</div>
+                            <div class="text-2xl coil-status">●</div>
+                            <div class="text-xs text-gray-400 mt-1">INACTIVA</div>
+                        </div>
+                        <div id="coil-2" class="coil-card p-4 bg-gray-800/50 rounded-xl border border-gray-700 text-center">
+                            <div class="text-lg font-bold mb-1 orbitron">BOBINA 2</div>
+                            <div class="text-2xl coil-status">●</div>
+                            <div class="text-xs text-gray-400 mt-1">INACTIVA</div>
+                        </div>
+                        <div id="coil-3" class="coil-card p-4 bg-gray-800/50 rounded-xl border border-gray-700 text-center">
+                            <div class="text-lg font-bold mb-1 orbitron">BOBINA 3</div>
+                            <div class="text-2xl coil-status">●</div>
+                            <div class="text-xs text-gray-400 mt-1">INACTIVA</div>
+                        </div>
+                        <div id="coil-4" class="coil-card p-4 bg-gray-800/50 rounded-xl border border-gray-700 text-center">
+                            <div class="text-lg font-bold mb-1 orbitron">BOBINA 4</div>
+                            <div class="text-2xl coil-status">●</div>
+                            <div class="text-xs text-gray-400 mt-1">INACTIVA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: CALIBRACIÓN TPS -->
+            <div id="tab-throttle" class="hidden">
+                <div class="glass rounded-xl p-4 mb-4">
+                    <h3 class="orbitron text-cyan-400 font-bold text-sm mb-3">CALIBRACIÓN CUERPO DE ACELERACIÓN</h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-900/20 border border-blue-600/30 rounded-xl p-3 text-xs text-blue-300">
+                            <i class="fa-solid fa-lightbulb mr-2"></i>
+                            <strong>INSTRUCCIONES:</strong>
+                            <ol class="mt-2 ml-4 space-y-1">
+                                <li>1. Motor APAGADO, llave en ON</li>
+                                <li>2. Presionar "INICIAR CALIBRACIÓN"</li>
+                                <li>3. No tocar el acelerador durante 30 segundos</li>
+                            </ol>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="text-6xl mb-3 orbitron font-black" id="tps-value">0%</div>
+                            <div class="text-xs text-gray-400 mb-4">POSICIÓN ACTUAL</div>
+                            <button onclick="calibrateTPS()" id="btn-calibrate" class="btn-pro px-6 py-3 rounded-xl font-bold">
+                                <i class="fa-solid fa-wrench mr-2"></i>INICIAR CALIBRACIÓN
+                            </button>
+                        </div>
+
+                        <div id="calibration-log" class="hidden mt-4 p-3 bg-gray-900 rounded text-xs font-mono text-green-400"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-inventory" class="hidden">
-            <div class="sticky top-0 bg-[#050505] z-10 pb-2">
-                <input type="text" id="search-inv" placeholder="🔍 BUSCAR PIEZA..." class="mb-2 border-blue-900 font-bold text-yellow-400" onkeyup="renderInv()">
-                <div class="flex gap-2 overflow-x-auto no-scroll pb-1">
-                    <button onclick="cambiarFiltro('TODO', this)" class="filter-btn active px-3 py-1 text-[10px] rounded border border-slate-700 whitespace-nowrap">TODO</button>
-                    <button onclick="cambiarFiltro('BOBINAS', this)" class="filter-btn px-3 py-1 text-[10px] rounded border border-slate-700 whitespace-nowrap">BOBINAS</button>
-                    <button onclick="cambiarFiltro('SENSORES', this)" class="filter-btn px-3 py-1 text-[10px] rounded border border-slate-700 whitespace-nowrap">SENSORES</button>
-                    <button onclick="cambiarFiltro('ELECTRICO', this)" class="filter-btn px-3 py-1 text-[10px] rounded border border-slate-700 whitespace-nowrap">ELÉCTRICO</button>
-                    <button onclick="cambiarFiltro('CARGA', this)" class="filter-btn px-3 py-1 text-[10px] rounded border border-slate-700 whitespace-nowrap">MARCHAS</button>
+        <!-- INVENTARIO -->
+        <div id="view-inventory" class="hidden pb-20">
+            <div class="sticky top-0 bg-[#0a0e27] z-10 pb-3">
+                <input type="text" id="search-inv" placeholder="🔍 Buscar pieza..." class="mb-3 w-full" onkeyup="renderInv()">
+                <div class="flex gap-2 overflow-x-auto pb-2">
+                    <button onclick="cambiarFiltro('TODO', this)" class="filter-btn active px-4 py-2 text-[10px] rounded-lg bg-gray-800 text-gray-300 font-bold whitespace-nowrap">TODO</button>
+                    <button onclick="cambiarFiltro('BOBINAS', this)" class="filter-btn px-4 py-2 text-[10px] rounded-lg bg-gray-800 text-gray-300 font-bold whitespace-nowrap">BOBINAS</button>
+                    <button onclick="cambiarFiltro('SENSORES', this)" class="filter-btn px-4 py-2 text-[10px] rounded-lg bg-gray-800 text-gray-300 font-bold whitespace-nowrap">SENSORES</button>
+                    <button onclick="cambiarFiltro('ELECTRICO', this)" class="filter-btn px-4 py-2 text-[10px] rounded-lg bg-gray-800 text-gray-300 font-bold whitespace-nowrap">ELÉCTRICO</button>
                 </div>
             </div>
             
-            <div id="inv-list" class="space-y-1 pb-20"></div>
+            <div id="inv-list" class="space-y-2"></div>
             
             <div class="admin-view fixed bottom-20 right-4 z-30">
-                <button onclick="modalAdd()" class="bg-green-600 w-14 h-14 rounded-full text-white shadow-2xl flex items-center justify-center text-2xl border-2 border-white"><i class="fa-solid fa-plus"></i></button>
-            </div>
-        </div>
-
-        <div id="view-soft" class="hidden">
-            <div class="bg-slate-900 p-4 rounded border border-slate-700 mb-4 shadow-lg">
-                <h2 class="text-blue-400 font-bold text-xs mb-3 border-b border-slate-700 pb-1">
-                    <i class="fa-solid fa-database"></i> CONSULTA TÉCNICA
-                </h2>
-                <div class="space-y-2">
-                    <select id="tech-make" onchange="loadModels()"><option value="">SELECCIONAR MARCA</option></select>
-                    <select id="tech-model" onchange="loadEngines()"><option value="">MODELO</option></select>
-                    <select id="tech-engine" onchange="showTechMenu()"><option value="">MOTOR</option></select>
-                </div>
-            </div>
-
-            <div id="tech-menu" class="hidden grid grid-cols-2 gap-3 pb-20">
-                <button onclick="showInfo('ECU')" class="bg-black border border-slate-700 p-4 rounded text-left hover:border-blue-500">
-                    <i class="fa-solid fa-microchip text-blue-500 text-2xl mb-1 block"></i>
-                    <div class="text-[10px] font-bold text-gray-300">ECU PINOUT</div>
-                </button>
-                <button onclick="showInfo('ENC')" class="bg-black border border-slate-700 p-4 rounded text-left hover:border-yellow-500">
-                    <i class="fa-solid fa-bolt text-yellow-500 text-2xl mb-1 block"></i>
-                    <div class="text-[10px] font-bold text-gray-300">BOBINAS</div>
-                </button>
-                <button onclick="showInfo('SENS')" class="bg-black border border-slate-700 p-4 rounded text-left hover:border-green-500">
-                    <i class="fa-solid fa-wave-square text-green-500 text-2xl mb-1 block"></i>
-                    <div class="text-[10px] font-bold text-gray-300">SENSORES</div>
-                </button>
-                <button onclick="showInfo('ELEC')" class="bg-black border border-slate-700 p-4 rounded text-left hover:border-red-500">
-                    <i class="fa-solid fa-plug text-red-500 text-2xl mb-1 block"></i>
-                    <div class="text-[10px] font-bold text-gray-300">ELÉCTRICO</div>
+                <button onclick="modalAdd()" class="bg-gradient-to-r from-green-500 to-emerald-600 w-14 h-14 rounded-full shadow-2xl glow flex items-center justify-center">
+                    <i class="fa-solid fa-plus text-white text-2xl"></i>
                 </button>
             </div>
         </div>
 
-    </div>
-
-    <div class="fixed bottom-0 w-full bg-black h-16 border-t border-slate-800 flex items-stretch z-40">
-        <button onclick="nav('home')" class="flex-1 text-gray-500 hover:text-white flex flex-col items-center justify-center gap-1 active:text-blue-500">
-            <i class="fa-solid fa-house text-lg"></i> <span class="text-[9px] font-bold">INICIO</span>
-        </button>
-        <button onclick="nav('inventory')" class="flex-1 text-gray-500 hover:text-white flex flex-col items-center justify-center gap-1 active:text-blue-500">
-            <i class="fa-solid fa-shop text-lg"></i> <span class="text-[9px] font-bold">VENTAS</span>
-        </button>
-    </div>
-
-    <div id="modal-add" class="hidden fixed inset-0 bg-black/95 z-[60] flex items-center justify-center p-4">
-        <div class="bg-slate-900 w-full max-w-sm p-6 rounded border border-slate-700">
-            <h3 class="text-white font-bold mb-4 text-center">NUEVO PRODUCTO</h3>
-            <input type="text" id="add-nom" placeholder="NOMBRE" class="mb-2">
-            <select id="add-cat" class="mb-2">
-                <option value="BOBINAS">BOBINAS</option><option value="SENSORES">SENSORES</option>
-                <option value="ELECTRICO">ELÉCTRICO</option><option value="CARGA">CARGA/ARRANQUE</option>
-                <option value="FUEL">INYECCIÓN</option><option value="BUJIAS">BUJÍAS</option>
-            </select>
-            <input type="text" id="add-mod" placeholder="MODELO" class="mb-2">
-            <input type="number" id="add-pre" placeholder="PRECIO" class="mb-2 text-green-500">
-            <div class="flex gap-2">
-                <button onclick="saveItem()" class="flex-1 bg-blue-600 text-white py-3 rounded font-bold text-xs">GUARDAR</button>
-                <button onclick="cerrarModal('modal-add')" class="flex-1 bg-slate-700 text-white py-3 rounded font-bold text-xs">CANCELAR</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-cart" class="hidden fixed inset-0 bg-black/95 z-[60] flex flex-col p-4">
-        <div class="flex justify-between items-center border-b border-gray-800 pb-3 mb-3">
-            <h2 class="text-white font-bold text-sm">NOTA DE VENTA - MILLÁN</h2>
-            <button onclick="cerrarModal('modal-cart')" class="text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
-        </div>
-        <div id="cart-list" class="flex-1 overflow-y-auto space-y-2 mb-4 text-xs font-mono text-gray-300"></div>
-        <div class="bg-slate-900 p-4 rounded border border-gray-800">
-            <div class="flex justify-between text-white font-bold mb-4 text-lg"><span>TOTAL:</span><span id="cart-total" class="text-green-400">$0.00</span></div>
-            <button onclick="enviarWhatsApp()" class="w-full bg-green-600 text-white py-3 rounded font-bold text-xs flex items-center justify-center gap-2">ENVIAR A WHATSAPP <i class="fa-brands fa-whatsapp text-lg"></i></button>
-        </div>
-    </div>
-
-    <div id="modal-info" class="hidden fixed inset-0 bg-[#050505] z-[70] overflow-y-auto p-4">
-        <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-4">
-            <h3 id="info-title" class="text-blue-400 font-bold text-sm"></h3>
-            <button onclick="cerrarModal('modal-info')" class="text-red-500 text-xl"><i class="fa-solid fa-times"></i></button>
-        </div>
-        <div id="info-content" class="space-y-4 text-xs font-mono text-gray-300"></div>
-    </div>
-
-    <script>
-        const defaultDB = [
-            {id:1, cat:"BOBINAS", nombre:"BOBINA JETTA A4 2.0L", modelo:"VW CUADRADA", precio:680},
-            {id:2, cat:"BOBINAS", nombre:"BOBINA TSURU III", modelo:"NISSAN INTERNA", precio:450},
-            {id:3, cat:"BOBINAS", nombre:"BOBINA CHEVY C2", modelo:"GM 3 PINES", precio:580},
-            {id:4, cat:"BOBINAS", nombre:"BOBINA FORD FIESTA", modelo:"ZETEC", precio:650},
-            {id:5, cat:"SENSORES", nombre:"SENSOR CKP JETTA G28", modelo:"VW A4", precio:480},
-            {id:6, cat:"SENSORES", nombre:"SENSOR MAF TSURU", modelo:"HITACHI 3 PIN", precio:950},
-            {id:7, cat:"SENSORES", nombre:"SENSOR O2 UNIVERSAL", modelo:"4 CABLES", precio:450},
-            {id:8, cat:"CARGA", nombre:"PORTACARBON MARCHA", modelo:"VALEO CHEVY", precio:220},
-            {id:9, cat:"CARGA", nombre:"BENDIX BOSCH 9D", modelo:"VW", precio:280},
-            {id:10, cat:"ELECTRICO", nombre:"RELEVADOR 109", modelo:"VW ECU", precio:180}
-        ];
-
-        let appState = {
-            inv: [],
-            cart: [],
-            isAdmin: false,
-            currentFilter: 'TODO',
-            btConnected: false,
-            dataInterval: null
-        };
-
-        function saveDB() { 
-            localStorage.setItem('ml_db_v40', JSON.stringify(appState.inv)); 
-        }
-
-        function loadDB() {
-            const saved = localStorage.getItem('ml_db_v40');
-            appState.inv = saved ? JSON.parse(saved) : [...defaultDB];
-        }
-
-        async function connectOBD() {
-            const btn = document.getElementById('btn-connect');
-            const status = document.getElementById('conn-status');
-
-            if (appState.btConnected) {
-                desconectarOBD();
-                return;
-            }
-
-            if (!navigator.bluetooth) {
-                alert("TU NAVEGADOR NO SOPORTA BLUETOOTH WEB. USA CHROME EN ANDROID.");
-                simulateConnection();
-                return;
-            }
-
-            try {
-                logTerm("BUSCANDO DISPOSITIVOS BLE...");
-                
-                const device = await navigator.bluetooth.requestDevice({
-                    acceptAllDevices: true,
-                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb', 'e7810a71-73ae-499d-8c15-faa9aef0c3f2'] 
-                });
-
-                logTerm(`CONECTANDO A: ${device.name}...`);
-                const server = await device.gatt.connect();
-                
-                status.innerText = "CONECTADO";
-                status.className = "text-[9px] bg-green-900 text-green-200 px-2 py-1 rounded";
-                btn.innerText = "DESCONECTAR";
-                btn.className = "w-full bg-red-700 text-white py-3 rounded font-bold text-xs shadow hover:bg-red-600 transition";
-                logTerm("CONEXIÓN EXITOSA. PROTOCOLO ISO-15765-4");
-                
-                appState.btConnected = true;
-                startDataStream();
-
-            } catch (error) {
-                logTerm("ERROR: " + error.message);
-                logTerm("ACTIVANDO MODO SIMULACIÓN...");
-                setTimeout(simulateConnection, 1000);
-            }
-        }
-
-        function desconectarOBD() {
-            const status = document.getElementById('conn-status');
-            const btn = document.getElementById('btn-connect');
-            
-            if (appState.dataInterval) {
-                clearInterval(appState.dataInterval);
-                appState.dataInterval = null;
-            }
-            
-            appState.btConnected = false;
-            status.innerText = "DESCONECTADO";
-            status.className = "text-[9px] bg-red-900 text-red-200 px-2 py-1 rounded";
-            btn.innerText = "BUSCAR DISPOSITIVO BLUETOOTH (BLE)";
-            btn.className = "w-full bg-blue-700 text-white py-3 rounded font-bold text-xs shadow hover:bg-blue-600 transition";
-            logTerm("DESCONECTADO");
-            
-            document.getElementById('val-rpm').innerText = '0';
-            document.getElementById('val-temp').innerText = '0 °C';
-            document.getElementById('val-volt').innerText = '0.0 V';
-            document.getElementById('val-o2').innerText = '0.00 V';
-        }
-
-        function simulateConnection() {
-            const status = document.getElementById('conn-status');
-            const btn = document.getElementById('btn-connect');
-            
-            setTimeout(() => logTerm("TX: ATZ (RESET)"), 500);
-            setTimeout(() => logTerm("RX: ELM327 v1.5"), 1000);
-            setTimeout(() => logTerm("TX: 0100 (SEARCH)"), 1500);
-            setTimeout(() => {
-                logTerm("CONEXIÓN ESTABLECIDA (SIM)");
-                status.innerText = "ONLINE (SIM)";
-                status.className = "text-[9px] bg-green-900 text-green-200 px-2 py-1 rounded";
-                btn.innerText = "DESCONECTAR";
-                btn.className = "w-full bg-red-700 text-white py-3 rounded font-bold text-xs shadow hover:bg-red-600 transition";
-                appState.btConnected = true;
-                startDataStream();
-            }, 2500);
-        }
-
-        function startDataStream() {
-            appState.dataInterval = setInterval(() => {
-                document.getElementById('val-rpm').innerText = Math.floor(Math.random() * 50 + 800);
-                document.getElementById('val-temp').innerText = Math.floor(Math.random() * 6 + 92) + " °C";
-                document.getElementById('val-volt').innerText = (Math.random() * 0.4 + 13.8).toFixed(1) + " V";
-                document.getElementById('val-o2').innerText = (Math.random() * 0.7 + 0.1).toFixed(2) + " V";
-            }, 800);
-        }
-
-        function logTerm(msg) {
-            const t = document.getElementById('terminal');
-            const d = document.createElement('div');
-            d.innerText = `> ${msg}`;
-            t.appendChild(d);
-            t.scrollTop = t.scrollHeight;
-        }
-
-        function toggleBluetooth() {
-            const icon = document.getElementById('bt-icon');
-            if (appState.btConnected) {
-                icon.className = "text-blue-500";
-            } else {
-                icon.className = "text-gray-500 hover:text-white";
-            }
-        }
-
-        function renderInv() {
-            const list = document.getElementById('inv-list');
-            const term = document.getElementById('search-inv').value.toUpperCase();
-            list.innerHTML = '';
-
-            const filtered = appState.inv.filter(p => 
-                (appState.currentFilter === 'TODO' || p.cat === appState.currentFilter) &&
-                (p.nombre.includes(term) || p.modelo.includes(term))
-            );
-
-            filtered.forEach(p => {
-                let adm = appState.isAdmin ? `<button onclick="delItem(${p.id})" class="text-red-500 ml-2"><i class="fa-solid fa-trash"></i></button>` : '';
-                list.innerHTML += `
-                <div class="card">
-                    <div class="flex justify-between">
-                        <div>
-                            <div class="text-[10px] text-gray-500 font-bold">${p.cat}</div>
-                            <div class="font-bold text-xs text-white">${p.nombre}</div>
-                            <div class="text-[9px] text-gray-400 font-mono">${p.modelo}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-green-400 font-bold text-sm mb-1">$${p.precio}</div>
-                            <button onclick="addCart(${p.id})" class="bg-blue-700 text-white px-3 py-1 rounded text-[10px] font-bold">AGREGAR</button>
-                            ${adm}
-                        </div>
-                    </div>
-                </div>`;
-            });
-        }
-
-        function cambiarFiltro(cat, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            appState.currentFilter = cat;
-            renderInv();
-        }
-
-        function addCart(id) {
-            const item = appState.inv.find(x => x.id === id);
-            if (item) {
-                appState.cart.push(item);
-                document.getElementById('badge-cart').innerText = appState.cart.length;
-            }
-        }
-
-        function verCarrito() {
-            const l = document.getElementById('cart-list');
-            l.innerHTML = '';
-            let total = 0;
-            
-            appState.cart.forEach((p, i) => {
-                total += parseInt(p.precio);
-                l.innerHTML += `<div class="flex justify-between border-b border-gray-800 py-2"><span>${p.nombre}</span><span>$${p.precio}</span></div>`;
-            });
-            
-            document.getElementById('cart-total').innerText = '$' + total.toFixed(2);
-            document.getElementById('modal-cart').classList.remove('hidden');
-        }
-
-        function enviarWhatsApp() {
-            if(appState.cart.length === 0) {
-                alert("CARRITO VACÍO");
-                return;
-            }
-            
-            let msg = "*ORDEN DE VENTA - PROPART SYSTEM ML*\n---------------------------\n";
-            let total = 0;
-            
-            appState.cart.forEach(p => { 
-                msg += `▪ ${p.nombre} .. $${p.precio}\n`; 
-                total += parseInt(p.precio); 
-            });
-            
-            msg += 
+        <!-- DATOS TÉCNICOS -->
+        <div id="view-soft" class="hidden pb-20">
+            <div class="glass rounded-xl p-4 mb-4">
+                <h3 class="orbitron text-cyan-400 font-bold text-sm mb-4">CONSULTA TÉCNICA</h3>
+                <div class="space-y-3">
+                    <select id="tech-make" onchange="loadModels()" class="w-full">
+                        <option value="">SELECCIONAR
