@@ -1,253 +1,335 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propart Diagnostic | Dashboard Central</title>
+    <title>ProPart Millán - MASTER FINAL BT</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 600px; 
-            margin-left: auto; 
-            margin-right: auto; 
-            height: 350px; 
-            max-height: 400px; 
-        }
-        .service-card { transition: all 0.3s ease; }
-        .service-card:hover { transform: translateY(-5px); }
-        .tab-active { border-bottom: 3px solid #2563eb; color: #2563eb; }
+        :root { --primary: #ffd700; --bg: #050505; --panel: #141414; --text: #e0e0e0; --accent: #00ff00; --danger: #ff4444; --info: #00d2ff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; user-select: none; overflow: hidden; }
+        
+        header { background: linear-gradient(180deg, #1a1a1a 0%, #000 100%); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
+        .brand { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+        .brand span { color: var(--primary); }
+        .led { width: 10px; height: 10px; background: #333; border-radius: 50%; border: 1px solid #555; transition:0.3s; }
+        .led.on { background: #0f0; box-shadow: 0 0 10px #0f0; border-color: #fff; }
+
+        .container { padding: 15px; max-width: 800px; margin: 0 auto; height: calc(100vh - 60px); overflow-y: auto; padding-bottom: 80px; box-sizing: border-box; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .tile { background: var(--panel); border: 1px solid #333; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.1s; position: relative; }
+        .tile:active { transform: scale(0.98); background: #222; border-color: var(--primary); }
+        .tile i { font-size: 2rem; color: var(--primary); display: block; margin-bottom: 10px; }
+        .tile.active-sensor { border: 2px solid var(--accent); background: rgba(0, 255, 0, 0.1); }
+
+        .proto-switch { display: flex; background: #222; border-radius: 10px; margin-bottom: 15px; border: 1px solid #444; overflow: hidden; }
+        .proto-opt { flex: 1; text-align: center; padding: 12px; font-size: 0.8rem; cursor: pointer; color: #888; transition: 0.3s; }
+        .proto-opt.selected { background: var(--primary); color: #000; font-weight: bold; }
+
+        .graph-wrapper { background: #000; border: 1px solid #333; border-radius: 10px; padding: 10px; position: relative; margin-bottom: 15px; }
+        canvas { width: 100%; height: 180px; display: block; }
+        .live-val { position: absolute; top: 10px; right: 15px; font-size: 2rem; font-weight: bold; color: var(--accent); font-family: monospace; text-shadow: 0 0 10px rgba(0,255,0,0.4); }
+        .live-label { position: absolute; top: 10px; left: 15px; font-size: 0.8rem; color: #aaa; text-transform: uppercase; font-weight: bold; }
+
+        .codes-box { background: #111; border: 1px dashed #444; padding: 15px; min-height: 100px; margin-bottom: 20px; border-radius: 8px; font-family: monospace; color: var(--primary); font-size: 1.1rem; white-space: pre-wrap; text-align: center; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        
+        .sensor-card { background: #1a1a1a; border-radius: 10px; padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--info); }
+        .sensor-title { color: #fff; font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; }
+        .connector-view { background: #000; padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px dashed #555; }
+        .wire-line { display: flex; align-items: center; margin-bottom: 8px; font-family: monospace; font-size: 0.85rem; color: #ddd; }
+        .wire-color { width: 30px; height: 8px; border-radius: 4px; margin-right: 10px; border: 1px solid #555; }
+        
+        #console-output { font-family: monospace; font-size: 0.7rem; color: #666; text-align: center; margin-top: 10px; height: 20px; overflow: hidden; }
+        .screen { display: none; height: 100%; }
+        .screen.active { display: block; animation: fade 0.3s; }
+        @keyframes fade { from {opacity:0} to {opacity:1} }
+        button.btn-back { background: #333; color: #fff; border: none; padding: 10px 25px; border-radius: 20px; margin-bottom: 15px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body>
 
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-2xl font-black text-blue-600 tracking-tighter">PROPART <span class="text-slate-700 underline decoration-amber-500">MILLÁN</span></span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8 text-sm font-bold text-slate-600 uppercase tracking-widest">
-                    <button onclick="navigate('home')" class="hover:text-blue-600 transition-colors">Inicio</button>
-                    <button onclick="navigate('services')" class="hover:text-blue-600 transition-colors">Servicios</button>
-                    <button onclick="navigate('tech')" class="hover:text-blue-600 transition-colors">Tecnología</button>
-                    <button onclick="navigate('home')" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-all">Acceso Premium</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+<header>
+    <div class="brand">PROPART <span>MILLÁN</span></div>
+    <div style="display:flex; align-items:center;">
+        <span id="conn-status" style="font-size:0.7rem; color:#555; margin-right:10px; font-weight:bold;">OFFLINE</span>
+        <div id="connection-led" class="led"></div>
+    </div>
+</header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="container">
+    <!-- MENU PRINCIPAL -->
+    <div id="menu-screen" class="screen active">
+        <h2 style="text-align:center; font-weight:300;">Panel Diagnóstico Master</h2>
         
-        <!-- Welcome Section -->
-        <section id="section-home" class="mb-16">
-            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-200 flex flex-col md:flex-row items-center gap-10">
-                <div class="flex-1">
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-                        Ingeniería en Diagnóstico <br><span class="text-blue-600">Automotriz Especializado</span>
-                    </h2>
-                    <p class="text-slate-600 text-lg mb-8">
-                        Analizamos la arquitectura electrónica de cualquier vehículo con precisión quirúrgica. Soluciones avanzadas en programación de llaves, reparación de ECUs y sistemas Diesel.
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
-                            <span class="block text-2xl font-bold text-blue-600">Nivel Plata</span>
-                            <span class="text-sm text-slate-500">Diagnóstico básico y mantenimiento preventivo.</span>
-                        </div>
-                        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
-                            <span class="block text-2xl font-bold text-amber-600">Nivel Premium</span>
-                            <span class="text-sm text-slate-500">Reparación de módulos, diagramas 3D y software especializado.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 w-full">
-                    <div class="chart-container bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                        <canvas id="capabilityChart"></canvas>
-                    </div>
-                    <p class="text-center text-[10px] text-slate-400 mt-4 uppercase font-black tracking-widest">Matriz de Capacidades Propart</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="section-services" class="mb-16 hidden">
-            <div class="text-center mb-10">
-                <h3 class="text-3xl font-bold text-slate-900 mb-2">Catálogo de Especialidades</h3>
-                <p class="text-slate-500">Soluciones integrales basadas en reportes de alta ingeniería.</p>
-                <div class="flex justify-center gap-2 mt-6">
-                    <button onclick="filterServices('all')" class="px-6 py-2 rounded-full bg-slate-200 text-slate-700 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Todos</button>
-                    <button onclick="filterServices('diesel')" class="px-6 py-2 rounded-full bg-slate-200 text-slate-700 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Diesel</button>
-                    <button onclick="filterServices('software')" class="px-6 py-2 rounded-full bg-slate-200 text-slate-700 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Software</button>
-                    <button onclick="filterServices('hardware')" class="px-6 py-2 rounded-full bg-slate-200 text-slate-700 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all">Hardware</button>
-                </div>
-            </div>
-
-            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Inyectado por JavaScript -->
-            </div>
-        </section>
-
-        <!-- Technology Section -->
-        <section id="section-tech" class="mb-16 bg-slate-900 text-white rounded-3xl p-8 md:p-12 overflow-hidden relative hidden">
-            <div class="relative z-10 flex flex-col lg:flex-row gap-12">
-                <div class="flex-1">
-                    <h3 class="text-3xl font-bold mb-6 text-blue-400">Hub de Compatibilidad</h3>
-                    <p class="text-slate-400 mb-8">
-                        Nuestras herramientas vLink y ELM327 Pro son el estándar de oro en diagnósticos multimarca.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer" onclick="updateTechInfo('obd')">
-                            <span class="font-bold text-white block">OBDII Bluetooth 4.0</span>
-                            <span class="text-xs text-slate-500">Compatibilidad con Android, iOS y PC.</span>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer" onclick="updateTechInfo('vlink')">
-                            <span class="font-bold text-white block">Interface V-Link Industrial</span>
-                            <span class="text-xs text-slate-500">Alta velocidad para protocolos CAN de carga pesada.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-1 bg-white/5 rounded-2xl p-8 border border-white/10 min-h-[300px] flex flex-col justify-center">
-                    <div id="tech-detail" class="text-center lg:text-left">
-                        <div class="text-5xl mb-6">🛰️</div>
-                        <h4 class="text-xl font-bold text-blue-400 mb-2 uppercase tracking-widest text-sm">Información de Hardware</h4>
-                        <p class="text-slate-500 text-sm">Selecciona una interface para ver las especificaciones de ingeniería.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="flex justify-center gap-4 mb-4">
-                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-400">DIESEL</span>
-                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-400">GASOLINA</span>
-                <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-400">G.L.P.</span>
-            </div>
-            <p class="text-slate-600 font-black tracking-widest text-sm uppercase">Propart Diagnostic © 2026</p>
-            <p class="text-slate-400 text-[10px] mt-2 italic">Socio: Juls AI Specialist | Liderando el futuro electromecánico</p>
+        <div class="proto-switch">
+            <div id="proto-vw" class="proto-opt selected" onclick="setProtocol('VW')">VW GOLF A4</div>
+            <div id="proto-uni" class="proto-opt" onclick="setProtocol('UNI')">UNIVERSAL</div>
         </div>
-    </footer>
 
-    <script>
-        // --- DATA SOURCE ---
-        const services = [
-            { id: 1, category: 'software', title: 'Programación de Llaves', desc: 'Duplicado y sincronización de chips transponder de alta seguridad.', icon: '🔑' },
-            { id: 2, category: 'hardware', title: 'Reparación de ECUs', desc: 'Intervención de micro-electrónica en módulos de motor y carrocería.', icon: '⚙️' },
-            { id: 3, category: 'diesel', title: 'Sistemas Diesel', desc: 'Diagnóstico profundo de inyectores y sistemas de post-tratamiento.', icon: '🚛' },
-            { id: 4, category: 'software', title: 'Lectura de PIN Code', desc: 'Extracción de códigos de seguridad vía OBD2 o lectura de EEPROM.', icon: '🔒' },
-            { id: 5, category: 'hardware', title: 'Diagramas de Módulos', desc: 'Planos eléctricos detallados para resolución rápida de fallas.', icon: '📋' },
-            { id: 6, category: 'software', title: 'Immo Off', desc: 'Desactivación de inmovilizadores por software en casos especiales.', icon: '❌' }
-        ];
+        <div class="dashboard-grid">
+            <div class="tile" style="grid-column:span 2; border-color:var(--primary); background: linear-gradient(45deg, #1a1a1a, #2a2a20);" onclick="conectarScanner()">
+                <i class="fas fa-plug"></i><h3>CONECTAR SCANNER</h3><small id="proto-desc" style="color:#aaa;">Protocolo: ISO 9141-2</small>
+            </div>
+            
+            <div class="tile" onclick="irA('codes-screen')"><i class="fas fa-clipboard-list"></i><h3>Códigos Falla</h3></div>
+            <div class="tile" onclick="irA('sensors-screen')"><i class="fas fa-chart-line"></i><h3>Scanner Vivo</h3></div>
+            <div class="tile" onclick="irA('guide-screen')"><i class="fas fa-book-medical"></i><h3>Cómo Medir</h3></div>
+            <div class="tile" onclick="irA('parts-screen')"><i class="fas fa-boxes"></i><h3>Inventario</h3></div>
+        </div>
+        <div id="console-output">Sistema vLink Pro.</div>
+    </div>
 
-        // --- CORE UI LOGIC ---
-        function renderServices(items) {
-            const grid = document.getElementById('services-grid');
-            grid.innerHTML = '';
-            items.forEach(s => {
-                grid.innerHTML += `
-                    <div class="service-card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-400 transition-all cursor-pointer">
-                        <div class="text-4xl mb-4">${s.icon}</div>
-                        <h4 class="text-xl font-bold text-slate-900 mb-2">${s.title}</h4>
-                        <p class="text-slate-500 text-sm leading-relaxed">${s.desc}</p>
-                        <div class="mt-6 inline-block px-2 py-1 bg-slate-100 rounded text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                            ${s.category}
-                        </div>
-                    </div>
-                `;
+    <!-- PANTALLA SENSORES -->
+    <div id="sensors-screen" class="screen">
+        <button class="btn-back" onclick="detenerGrafica(); irA('menu-screen')"> < Volver</button>
+        <div class="graph-wrapper">
+            <div id="sensor-label" class="live-label">SELECCIONA SENSOR</div>
+            <div id="sensor-val" class="live-val">--</div>
+            <canvas id="liveChart"></canvas>
+        </div>
+
+        <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="tile" id="btn-rpm" onclick="monitorear('RPM')"><i class="fas fa-tachometer-alt"></i><h3>RPM</h3></div>
+            <div class="tile" id="btn-tps" onclick="monitorear('TPS')"><i class="fas fa-bullseye"></i><h3>TPS</h3></div>
+            <div class="tile" id="btn-maf" onclick="monitorear('MAF')"><i class="fas fa-wind"></i><h3>MAF</h3></div>
+            <div class="tile" id="btn-app1" onclick="monitorear('APP1')"><i class="fas fa-shoe-prints"></i><h3>APP 1</h3></div>
+            <div class="tile" id="btn-app2" onclick="monitorear('APP2')"><i class="fas fa-shoe-prints"></i><h3>APP 2</h3></div>
+            <div class="tile" id="btn-volt" onclick="monitorear('VOLT')"><i class="fas fa-bolt"></i><h3>VOLT</h3></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA CODIGOS -->
+    <div id="codes-screen" class="screen">
+        <button class="btn-back" onclick="irA('menu-screen')"> < Volver</button>
+        <h3>Códigos DTC:</h3>
+        <div id="dtc-display" class="codes-box">Presiona "LEER"<br>para buscar fallas.</div>
+        <div class="dashboard-grid">
+            <div class="tile" style="border-color:#0f0;" onclick="leerCodigos()"><i class="fas fa-search" style="color:#0f0;"></i><h3>LEER</h3></div>
+            <div class="tile" style="border-color:#ff4444;" onclick="borrarCodigos()"><i class="fas fa-trash-alt" style="color:#ff4444;"></i><h3>BORRAR</h3></div>
+        </div>
+        <p style="text-align:center; color:#555; font-size:0.8rem;">*Motor apagado, switch abierto.</p>
+    </div>
+
+    <!-- GUÍA VISUAL -->
+    <div id="guide-screen" class="screen">
+        <button class="btn-back" onclick="irA('menu-screen')"> < Volver</button>
+        <h2>Guía de Pruebas</h2>
+        <div class="sensor-card">
+            <div class="sensor-title">TPS (Cuerpo Aceleración)</div>
+            <div class="connector-view">
+                <div class="wire-line"><div class="wire-color" style="background:purple;"></div> PIN 1: 5V</div>
+                <div class="wire-line"><div class="wire-color" style="background:brown;"></div> PIN 2: Tierra</div>
+                <div class="wire-line"><div class="wire-color" style="background:yellow;"></div> PIN 4: Señal 1</div>
+                <div class="wire-line"><div class="wire-color" style="background:white;"></div> PIN 6: Señal 2</div>
+            </div>
+        </div>
+        <div class="sensor-card">
+            <div class="sensor-title">Pedal (APP)</div>
+            <div class="connector-view">
+                <div class="wire-line"><div class="wire-color" style="background:grey;"></div> PIN 1/2: 5V</div>
+                <div class="wire-line"><div class="wire-color" style="background:green;"></div> PIN 4: Señal 1 (0-5V)</div>
+                <div class="wire-line"><div class="wire-color" style="background:blue;"></div> PIN 6: Señal 2 (0-2.5V)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVENTARIO -->
+    <div id="parts-screen" class="screen">
+        <button class="btn-back" onclick="irA('menu-screen')"> < Volver</button>
+        <div class="codes-box" style="border-style: solid;">Módulo de Inventario Propart v5</div>
+        <p style="color:#666; text-align:center;">Base de datos cargada localmente.</p>
+    </div>
+</div>
+
+<script>
+    // --- VARIABLES GLOBALES ---
+    let currentProtocol = 'VW';
+    let device, server, char;
+    let isBusy = false;
+    let activeSensor = null;
+    let monitorInterval;
+    let dataHistory = new Array(50).fill(0);
+    let maxValue = 100;
+
+    const chartCtx = document.getElementById('liveChart').getContext('2d');
+
+    // --- UUIDS MAESTROS (LOS QUE SÍ CONECTAN) ---
+    const BT_UUIDS = [
+        'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // vGate/vLink
+        '0000fff0-0000-1000-8000-00805f9b34fb', // ELM327 BLE
+        '0000ffe0-0000-1000-8000-00805f9b34fb', // Serial Genérico
+        '49535343-fe7d-4ae5-8fa9-9fafd205e455'  // vLink iOS
+    ];
+
+    // --- NAVEGACIÓN ---
+    function irA(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function setProtocol(type) {
+        currentProtocol = type;
+        document.getElementById('proto-vw').className = type === 'VW' ? 'proto-opt selected' : 'proto-opt';
+        document.getElementById('proto-uni').className = type === 'UNI' ? 'proto-opt selected' : 'proto-opt';
+        document.getElementById('proto-desc').innerText = "Protocolo: " + (type==='VW'?'ISO 9141-2':'OBDII AUTO');
+    }
+
+    // --- MOTOR BLUETOOTH (REPOTENCIADO) ---
+    async function conectarScanner() {
+        try {
+            document.getElementById('console-output').innerText = "Buscando Scanner vLink...";
+            device = await navigator.bluetooth.requestDevice({
+                acceptAllDevices: true,
+                optionalServices: BT_UUIDS
             });
-        }
 
-        function filterServices(cat) {
-            if (cat === 'all') renderServices(services);
-            else renderServices(services.filter(s => s.category === cat));
-        }
-
-        function updateTechInfo(type) {
-            const detail = document.getElementById('tech-detail');
-            const info = {
-                obd: {
-                    title: 'ELM327 Pro Bluetooth',
-                    specs: ['Bluetooth 4.0 LE', 'Soporta protocolos SAE J1850', 'Actualizable vía Firmware'],
-                    status: 'Disponible para Plata/Premium'
-                },
-                vlink: {
-                    title: 'V-Link Industrial',
-                    specs: ['Protocolos K-Line y CAN-BUS', 'Manejo de 12V y 24V', 'Protección contra cortocircuitos'],
-                    status: 'Exclusivo Nivel Premium'
-                }
-            }[type];
-
-            detail.innerHTML = `
-                <div class="animate-in fade-in slide-in-from-right-4 duration-500">
-                    <h4 class="text-2xl font-bold text-blue-400 mb-4">${info.title}</h4>
-                    <ul class="space-y-3 mb-8">
-                        ${info.specs.map(s => `<li class="text-slate-300 flex items-center gap-2 text-sm"><span class="text-blue-500 text-xs">▶</span> ${s}</li>`).join('')}
-                    </ul>
-                    <div class="bg-blue-600/20 text-blue-400 p-4 rounded-xl text-xs font-bold text-center border border-blue-600/30 tracking-widest uppercase">
-                        ${info.status}
-                    </div>
-                </div>
-            `;
-        }
-
-        function navigate(section) {
-            const ids = ['home', 'services', 'tech'];
-            ids.forEach(id => {
-                const el = document.getElementById(`section-${id}`);
-                if (el) el.classList.add('hidden');
+            device.addEventListener('gattserverdisconnected', () => {
+                document.getElementById('connection-led').classList.remove('on');
+                document.getElementById('conn-status').innerText="OFFLINE";
+                detenerGrafica();
             });
-            document.getElementById(`section-${section}`).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
-        // --- CHARTS INITIALIZATION ---
-        window.onload = function() {
-            renderServices(services);
-
-            const ctx = document.getElementById('capabilityChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Diagnóstico', 'Software', 'Electrónica', 'Diesel', 'Llaves', 'Asistencia'],
-                    datasets: [{
-                        label: 'Plata',
-                        data: [70, 45, 40, 60, 80, 50],
-                        fill: true,
-                        backgroundColor: 'rgba(148, 163, 184, 0.2)',
-                        borderColor: 'rgb(148, 163, 184)',
-                        pointBackgroundColor: 'rgb(148, 163, 184)',
-                    }, {
-                        label: 'Premium',
-                        data: [100, 95, 90, 85, 100, 100],
-                        fill: true,
-                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                        borderColor: 'rgb(37, 99, 235)',
-                        pointBackgroundColor: 'rgb(37, 99, 235)',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            angleLines: { display: false },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            ticks: { display: false }
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { weight: 'bold', size: 10 } } }
+            server = await device.gatt.connect();
+            
+            // BÚSQUEDA INTELIGENTE DE SERVICIOS
+            const services = await server.getPrimaryServices();
+            for(let s of services) {
+                const characteristics = await s.getCharacteristics();
+                for(let c of characteristics) {
+                    if(c.properties.notify || c.properties.write) {
+                        char = c; break;
                     }
                 }
-            });
-        };
-    </script>
+                if(char) break;
+            }
+
+            if(!char) throw "No se halló canal de datos.";
+
+            await char.startNotifications();
+            char.addEventListener('characteristicvaluechanged', handleData);
+            
+            document.getElementById('connection-led').classList.add('on');
+            document.getElementById('conn-status').innerText = "ONLINE";
+            document.getElementById('console-output').innerText = "Conectado. Sincronizando...";
+
+            await enviar("AT Z", 1000);
+            await enviar("AT E0", 200);
+            if(currentProtocol === 'VW') {
+                await enviar("AT SP 3", 200);
+                await enviar("AT IIA 33", 200);
+            } else {
+                await enviar("AT SP 0", 200);
+            }
+            document.getElementById('console-output').innerText = "Listo socio Millán.";
+
+        } catch (err) {
+            alert("Socio, no se pudo conectar: " + err);
+            document.getElementById('console-output').innerText = "Fallo de conexión.";
+        }
+    }
+
+    async function enviar(cmd, wait = 0) {
+        if(!char || isBusy) return;
+        isBusy = true;
+        try {
+            await char.writeValue(new TextEncoder().encode(cmd + "\r"));
+            if(wait > 0) await new Promise(r => setTimeout(r, wait));
+        } catch(e) { console.error(e); }
+        isBusy = false;
+    }
+
+    function handleData(event) {
+        const raw = new TextDecoder().decode(event.target.value).trim();
+        const hex = raw.replace(/\s/g, '').replace(/>/g, '');
+        if(!hex) return;
+
+        let val = 0;
+        let txt = "--";
+
+        if(hex.includes("410C")) { // RPM
+            const idx = hex.indexOf("410C");
+            val = (parseInt(hex.substr(idx+4, 4), 16)) / 4;
+            txt = Math.round(val) + " RPM";
+        } 
+        else if(hex.includes("4111")) { // TPS
+            const idx = hex.indexOf("4111");
+            val = (parseInt(hex.substr(idx+4, 2), 16) * 100) / 255;
+            txt = Math.round(val) + " %";
+        }
+        else if(raw.includes("V")) { // Voltaje (AT RV)
+            val = parseFloat(raw);
+            txt = val.toFixed(1) + " V";
+        }
+        else if(hex.startsWith("43")) { // DTCs
+            let dtcs = "";
+            for(let i=2; i<hex.length; i+=4) {
+                let code = hex.substr(i, 4);
+                if(code !== "0000") dtcs += "P" + code + "\n";
+            }
+            document.getElementById('dtc-display').innerText = dtcs || "Sin fallas.";
+        }
+
+        if(txt !== "--") {
+            document.getElementById('sensor-val').innerText = txt;
+            dataHistory.push(val);
+            dataHistory.shift();
+            drawChart();
+        }
+    }
+
+    // --- MONITOREO ---
+    function monitorear(sensor) {
+        if(!char) return alert("¡Socio, primero conecta el scanner!");
+        if(monitorInterval) clearInterval(monitorInterval);
+        
+        activeSensor = sensor;
+        document.querySelectorAll('.tile').forEach(t => t.classList.remove('active-sensor'));
+        document.getElementById('btn-' + sensor.toLowerCase()).classList.add('active-sensor');
+        document.getElementById('sensor-label').innerText = sensor;
+
+        if(sensor==='RPM') maxValue=6000;
+        else if(sensor==='VOLT') maxValue=16;
+        else maxValue=100;
+
+        const speed = currentProtocol === 'VW' ? 600 : 350;
+        monitorInterval = setInterval(async () => {
+            if(isBusy) return;
+            if(sensor === 'RPM') await enviar("01 0C");
+            else if(sensor === 'TPS' || sensor === 'APP1') await enviar("01 11");
+            else if(sensor === 'VOLT') await enviar("AT RV");
+        }, speed);
+    }
+
+    function detenerGrafica() { clearInterval(monitorInterval); activeSensor = null; isBusy = false; }
+    async function leerCodigos() { if(!char) return alert("Conecta scanner"); document.getElementById('dtc-display').innerText = "Leyendo..."; await enviar("03"); }
+    async function borrarCodigos() { if(confirm("¿Seguro Millán?")) await enviar("04"); }
+
+    // --- GRÁFICA ---
+    function drawChart() {
+        const cvs = document.getElementById('liveChart');
+        const w = cvs.width = cvs.offsetWidth;
+        const h = cvs.height = cvs.offsetHeight;
+        chartCtx.clearRect(0,0,w,h);
+        chartCtx.beginPath();
+        chartCtx.strokeStyle = "#00ff00";
+        chartCtx.lineWidth = 3;
+        for(let i=0; i<dataHistory.length; i++) {
+            let x = i * (w/(dataHistory.length-1));
+            let y = h - ((dataHistory[i] / maxValue) * h);
+            if(i===0) chartCtx.moveTo(x, y); else chartCtx.lineTo(x, y);
+        }
+        chartCtx.stroke();
+    }
+
+    window.onload = () => drawChart();
+</script>
+
 </body>
 </html>
 ```
