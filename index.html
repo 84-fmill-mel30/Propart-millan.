@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROPART MASTER HUB V3.1 | GS-2005 EDITION</title>
-    <!-- Arsenal Tecnológico Master -->
+    <title>PROPART MASTER HUB V3.2 | VAG SPECIALIZED</title>
+    <!-- Arsenal Tecnológico Propart -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --neon: #22d3ee; --bg: #020617; --card: #0f172a; --amber: #fbbf24; --emerald: #10b981; --rose: #f43f5e; }
+        :root { --neon: #3b82f6; --bg: #020617; --card: #0f172a; --amber: #fbbf24; --emerald: #10b981; --rose: #f43f5e; }
         body { 
             background-color: var(--bg); 
             color: #f8fafc; 
@@ -22,189 +22,162 @@
         }
         
         .glass { 
-            background: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(20px); 
+            background: rgba(15, 23, 42, 0.96); 
+            backdrop-filter: blur(30px); 
             border: 1px solid rgba(255,255,255,0.08); 
             border-radius: 1.5rem; 
         }
         
         .active-tab { 
-            background: rgba(34, 211, 238, 0.15); 
+            background: rgba(59, 130, 246, 0.15); 
             border-bottom: 3px solid var(--neon); 
             color: var(--neon); 
         }
         
         #hologram-viewport {
             width: 100%;
-            height: 340px;
+            height: 350px;
             cursor: grab;
-            background: radial-gradient(circle at center, rgba(34, 211, 238, 0.1) 0%, transparent 85%);
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 85%);
             touch-action: none;
             border-radius: 1.5rem;
         }
 
-        .btn-console { 
+        .btn-master { 
             background: #1e293b; 
             border: 1px solid #334155; 
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
         }
-        .btn-console:active { transform: scale(0.95); background: #334155; }
+        .btn-master:active { transform: scale(0.95); background: #334155; }
         
-        .terminal-bg { 
-            background: rgba(0,0,0,0.9); 
-            border: 1px solid rgba(34, 211, 238, 0.2); 
+        .terminal-box { 
+            background: rgba(0,0,0,0.95); 
+            border: 1px solid rgba(59, 130, 246, 0.2); 
             border-radius: 1.2rem; 
-            font-family: 'Courier New', monospace; 
+            font-family: 'Consolas', 'Monaco', monospace; 
         }
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         
-        @keyframes pulse-status { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px var(--neon)); } 50% { opacity: 0.5; } }
-        .status-pill { animation: pulse-status 2s infinite; }
+        @keyframes pulse-blue { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px var(--neon)); } 50% { opacity: 0.5; } }
+        .status-active { animation: pulse-blue 2s infinite; }
         
-        .fault-card { 
-            background: rgba(244, 63, 94, 0.1); 
+        .fault-item { 
+            background: rgba(244, 63, 94, 0.08); 
             border-left: 4px solid var(--rose); 
-            animation: slideIn 0.3s ease-out;
+            animation: slideLeft 0.3s ease-out;
         }
-        @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideLeft { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body class="flex flex-col select-none">
 
-    <!-- Header Identidad Millán -->
+    <!-- Header Master Propart Diagnostic -->
     <header class="glass mx-3 mt-3 p-4 flex flex-col items-center border-b border-white/5 sticky top-0 z-50">
         <div class="flex items-center gap-4 w-full justify-between">
             <div class="flex items-center gap-3">
-                <div class="p-2 bg-cyan-500 rounded-lg shadow-lg font-black text-black text-[10px] uppercase">PROPART</div>
-                <h1 class="text-xl font-black tracking-tighter uppercase italic">Master <span class="text-cyan-400">Hub V3.1</span></h1>
+                <div class="p-2 bg-blue-600 rounded-lg shadow-lg font-black text-white text-[10px] uppercase">PROPART</div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic">Master <span class="text-blue-500">Suite V3.2</span></h1>
             </div>
-            <div id="connection-indicator" class="flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-full border border-white/10">
+            <div id="status-pill" class="flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-full border border-white/10">
                 <div id="bt-led" class="w-2 h-2 rounded-full bg-slate-700 transition-all duration-500"></div>
-                <span id="bt-status" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">GS Offline</span>
+                <span id="bt-status" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic">VAG Offline</span>
             </div>
         </div>
         
         <nav class="flex mt-4 bg-slate-900/80 p-1 rounded-2xl border border-white/5 w-full max-w-md gap-1">
             <button onclick="switchTab('diag')" id="tab-diag-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 active-tab">Diagnóstico</button>
-            <button onclick="switchTab('lab')" id="tab-lab-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">Hologramas</button>
-            <button onclick="switchTab('gs')" id="tab-gs-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">Info GS</button>
+            <button onclick="switchTab('arch')" id="tab-arch-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">3D Holograma</button>
+            <button onclick="switchTab('stats')" id="tab-stats-btn" class="tab-btn py-2 text-[10px] font-black uppercase rounded-xl flex-1 text-slate-500">Telemetría</button>
         </nav>
     </header>
 
     <main class="flex-grow overflow-y-auto custom-scroll p-4 space-y-6">
 
-        <!-- PESTAÑA 1: DIAGNÓSTICO RÁPIDO -->
+        <!-- PESTAÑA: DIAGNÓSTICO (Deep Scan VW) -->
         <section id="content-diag" class="tab-content block space-y-4">
             <div class="flex justify-between items-center px-2">
-                <h2 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Consola de Operaciones</h2>
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded font-black uppercase italic status-pill">Sincronización vLink 4.0</span>
+                <h2 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 italic">Consola de Operaciones Golf</h2>
+                <span class="text-[9px] bg-blue-500/10 text-blue-500 px-2 py-1 rounded font-black uppercase status-active italic">Protocolo VAG Active</span>
             </div>
 
-            <!-- Botonera de Acción para el GS -->
+            <!-- Botonera Maestra -->
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="btConnect()" id="connectMainBtn" class="btn-console p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl border border-cyan-500/20">
-                    <i class="fas fa-plug text-cyan-400 text-xl"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">Enlazar vLink</span>
+                <button onclick="btConnect()" id="masterSyncBtn" class="btn-master p-6 rounded-3xl flex flex-col items-center gap-3 shadow-2xl border border-blue-500/20">
+                    <i class="fas fa-link text-blue-500 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-widest">Sincronizar vLink</span>
                 </button>
-                <button onclick="escanearDTC()" class="btn-console p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl">
-                    <i class="fas fa-search-engine text-amber-500 text-xl"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">Escanear DTC</span>
+                <button onclick="deepScanDTC()" class="btn-master p-6 rounded-3xl flex flex-col items-center gap-3 shadow-2xl border border-amber-500/20">
+                    <i class="fas fa-microscope text-amber-500 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-widest">Deep Scan DTC</span>
                 </button>
-                <button onclick="btSend('010C')" class="btn-console p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl">
+                <button onclick="btSend('010C')" class="btn-master p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl">
                     <i class="fas fa-tachometer-alt text-emerald-500 text-xl"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">Leer RPM</span>
+                    <span class="text-[9px] font-black uppercase tracking-widest">Ver RPM Live</span>
                 </button>
-                <button onclick="borrarFallas()" class="btn-console p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl border border-rose-500/20">
-                    <i class="fas fa-trash-restore text-rose-500 text-xl"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest text-rose-500">Borrar Fallas</span>
+                <button onclick="borrarDTC()" class="btn-master p-6 rounded-3xl flex flex-col items-center gap-3 shadow-xl border border-rose-500/20">
+                    <i class="fas fa-eraser text-rose-500 text-xl"></i>
+                    <span class="text-[9px] font-black uppercase tracking-widest text-rose-500">Borrar Memoria</span>
                 </button>
             </div>
 
-            <!-- Lista de Resultados de Diagnóstico -->
-            <div id="results-container" class="space-y-3">
-                <h3 class="text-[10px] font-black text-slate-500 uppercase px-2 tracking-widest">Fallas en Memoria ECU</h3>
-                <div id="no-faults-msg" class="text-center py-6 border-2 border-dashed border-slate-800 rounded-3xl">
-                    <i class="fas fa-microchip text-slate-800 text-2xl mb-2"></i>
-                    <p class="text-[9px] text-slate-600 font-bold uppercase">Esperando escaneo de GS 2005...</p>
+            <!-- Resultados del Escaneo Extendidos -->
+            <div id="fault-container" class="space-y-3">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase px-2 tracking-widest italic">Códigos Encontrados</h3>
+                <div id="placeholder-msg" class="text-center py-10 border-2 border-dashed border-slate-800 rounded-3xl">
+                    <i class="fas fa-car-crash text-slate-800 text-3xl mb-2"></i>
+                    <p class="text-[9px] text-slate-600 font-bold uppercase tracking-tighter">Esperando enlace de datos Golf...</p>
                 </div>
             </div>
 
-            <!-- Terminal Cuántica Propart -->
-            <div class="terminal-bg p-5 flex flex-col h-72 overflow-hidden shadow-2xl border border-white/5">
+            <!-- Terminal de Ingeniería Propart -->
+            <div class="terminal-box p-5 flex flex-col h-80 overflow-hidden shadow-2xl border border-white/5">
                 <div class="flex justify-between items-center mb-3 border-b border-white/10 pb-2">
-                    <span class="text-[10px] font-black text-cyan-400 uppercase italic">Propart Engineering Terminal</span>
-                    <button onclick="document.getElementById('console').innerHTML = ''" class="text-[9px] text-slate-400 hover:text-white font-bold uppercase">Limpiar</button>
+                    <span class="text-[10px] font-black text-blue-400 uppercase italic tracking-tighter">Propart Engineering Terminal</span>
+                    <button onclick="document.getElementById('console').innerHTML = ''" class="text-[9px] text-slate-500 hover:text-white font-bold uppercase">Purgar</button>
                 </div>
-                <div id="console" class="flex-grow font-mono text-[10px] text-cyan-300 overflow-y-auto custom-scroll space-y-1">
-                    <div class="text-slate-600 italic font-bold uppercase">> Cargando protocolos GS 2005...</div>
-                    <div class="text-slate-600 italic font-bold uppercase">> Socio Millán, sistema listo.</div>
+                <div id="console" class="flex-grow font-mono text-[11px] text-blue-300 overflow-y-auto custom-scroll space-y-1">
+                    <div class="text-slate-600 italic font-bold uppercase">> Sistema Quantum V3.2 Iniciado...</div>
+                    <div class="text-slate-600 italic font-bold uppercase">> Socio Millán, esperando conexión vLink...</div>
                 </div>
             </div>
         </section>
 
-        <!-- PESTAÑA 2: LABORATORIO 3D (Hologramas) -->
-        <section id="content-lab" class="tab-content hidden space-y-4">
+        <!-- PESTAÑA: LABORATORIO 3D (Hologramas) -->
+        <section id="content-arch" class="tab-content hidden space-y-4 fade-in">
             <div class="flex justify-between items-center px-2">
-                <h2 class="text-xs font-black uppercase tracking-widest text-slate-400 italic">Inspección de Componentes</h2>
-                <span class="text-[9px] text-cyan-400 font-bold uppercase status-pill">Render 4K Active</span>
+                <h2 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Inspección de Componentes</h2>
+                <span class="text-[9px] text-blue-400 font-bold uppercase status-active">Renderizando...</span>
             </div>
 
-            <div class="glass overflow-hidden relative border border-cyan-500/20 shadow-2xl">
+            <div class="glass overflow-hidden relative border border-blue-500/20 shadow-2xl">
                 <div id="hologram-viewport"></div>
                 <div class="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
-                    <p id="proj-name" class="text-sm font-black text-white uppercase tracking-[0.4em] drop-shadow-lg italic">Modelo de Ingeniería</p>
+                    <p id="proj-name" class="text-sm font-black text-white uppercase tracking-[0.4em] drop-shadow-lg italic">Bloque de Motor</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 gap-3">
-                <div onclick="update3D('engine')" class="glass p-5 flex justify-between items-center border-l-4 border-cyan-500 active:scale-95 transition-all cursor-pointer">
-                    <div>
-                        <h4 class="font-bold text-xs uppercase">Estructura del Motor</h4>
-                        <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tighter">Puntos de anclaje de sensores</p>
-                    </div>
-                    <i class="fas fa-car-side text-cyan-500 text-lg"></i>
+                <div onclick="update3D('engine')" class="glass p-5 border-l-4 border-blue-500 active:scale-95 transition-all cursor-pointer">
+                    <h4 class="font-bold text-xs uppercase italic text-blue-400">Estructura del Motor VAG</h4>
+                    <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tighter">Mapeo de inyección y sensores</p>
                 </div>
-                <div onclick="update3D('generator')" class="glass p-5 flex justify-between items-center border-l-4 border-amber-500 active:scale-95 transition-all cursor-pointer">
-                    <div>
-                        <h4 class="font-bold text-xs uppercase">Generador / Alternador</h4>
-                        <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tighter">Esquema de carga 14.2v</p>
-                    </div>
-                    <i class="fas fa-bolt text-amber-500 text-lg"></i>
+                <div onclick="update3D('sensor')" class="glass p-5 border-l-4 border-amber-500 active:scale-95 transition-all cursor-pointer">
+                    <h4 class="font-bold text-xs uppercase italic text-amber-500">Sensor de Flujo (MAF)</h4>
+                    <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tighter">Diagrama de pines y señales</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- PESTAÑA 3: INFO GS 2005 -->
-        <section id="content-gs" class="tab-content hidden space-y-4">
-            <div class="glass p-8 border-l-4 border-amber-500 shadow-2xl">
-                <h3 class="text-[10px] font-black text-slate-500 uppercase mb-4 tracking-widest text-center">Ficha Técnica</h3>
-                <span class="text-3xl block text-center font-black text-amber-500 italic uppercase">GS SERIES 2005</span>
-                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-6 overflow-hidden">
-                    <div class="h-full bg-amber-500 w-full shadow-[0_0_12px_#fbbf24]"></div>
-                </div>
-                <p class="text-[10px] text-slate-400 mt-4 text-center font-bold uppercase tracking-widest">Protocolo Detectado: ISO 9141-2 / K-LINE</p>
-            </div>
-            
-            <div class="glass p-6 border border-white/5 space-y-4">
-                <h4 class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Recomendaciones de Socio JULS</h4>
-                <ul class="text-[10px] text-slate-400 space-y-2 list-disc pl-4 italic">
-                    <li>Revisar conectores de la ECU principal tras la guantera.</li>
-                    <li>Verificar resistencia del bus K en el pin 7 del OBDII.</li>
-                    <li>Sincronización vLink: Asegurar que el LED azul parpadee antes de escanear.</li>
-                </ul>
             </div>
         </section>
 
     </main>
 
-    <!-- Barra Inferior de Comandos Millán -->
+    <!-- Barra de Comandos Millán -->
     <footer class="p-4 glass border-t border-white/5 sticky bottom-0 mx-3 mb-3">
         <div class="flex gap-2 max-w-3xl mx-auto">
-            <input type="text" id="cmdInput" placeholder="Enviar AT o HEX..." class="flex-grow bg-slate-950 border border-slate-700 rounded-2xl px-5 py-3.5 text-white text-xs outline-none focus:ring-1 focus:ring-cyan-500 transition-all font-bold uppercase tracking-wider">
-            <button onclick="btSendManual()" class="bg-cyan-600 px-7 rounded-2xl flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-cyan-900/20">
-                <i class="fas fa-paper-plane text-black text-sm"></i>
+            <input type="text" id="cmdInput" placeholder="Comando AT/HEX para el Golf..." class="flex-grow bg-slate-950 border border-slate-700 rounded-2xl px-5 py-3.5 text-white text-xs outline-none focus:ring-1 focus:ring-blue-500 transition-all font-bold uppercase tracking-wider">
+            <button onclick="btSendManual()" class="bg-blue-600 px-7 rounded-2xl flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-blue-900/20">
+                <i class="fas fa-paper-plane text-white text-sm"></i>
             </button>
         </div>
         <p class="text-center text-[7px] font-bold text-slate-800 uppercase tracking-[0.5em] mt-5">
@@ -213,12 +186,12 @@
     </footer>
 
     <script>
-        // --- MOTOR TITANIUM SYNC V3.1 ---
+        // --- MOTOR TITANIUM VAG SYNC V3.2 ---
         let obdChar = null;
         const MASTER_UUIDS = [
             '0000fff0-0000-1000-8000-00805f9b34fb', // Standard vLink
-            '49535343-fe7d-4ae5-8fa9-9fafd205e455', // iOS Protocol
-            '0000ffe0-0000-1000-8000-00805f9b34fb', // Serial BLE
+            '49535343-fe7d-4ae5-8fa9-9fafd205e455', // iOS/vGate
+            '0000ffe0-0000-1000-8000-00805f9b34fb', // HM-10 BLE
             '000018f0-0000-1000-8000-00805f9b34fb'  // OBDII Generic
         ];
 
@@ -226,33 +199,34 @@
             const consoleEl = document.getElementById('console');
             const time = new Date().toLocaleTimeString([], { hour12: false });
             const prefix = type === 'tx' ? 'TX > ' : type === 'rx' ? 'RX < ' : 'SYS | ';
-            const color = type === 'tx' ? 'text-white font-bold' : type === 'rx' ? 'text-cyan-400 font-black' : 'text-slate-600';
+            const color = type === 'tx' ? 'text-white font-bold' : type === 'rx' ? 'text-blue-400 font-black' : 'text-slate-600';
             consoleEl.innerHTML += `<div class="fade-in"><span class="text-slate-800 font-black">[${time}]</span> <span class="${color}">${prefix}${msg}</span></div>`;
             consoleEl.scrollTop = consoleEl.scrollHeight;
         }
 
         async function btConnect() {
-            const btn = document.getElementById('connectMainBtn');
+            const btn = document.getElementById('masterSyncBtn');
             try {
-                log("Rastreando vLink para GS 2005...");
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span class="text-[9px] font-black uppercase">Conectando...</span>';
+                log("Rastreando vLink carnal Millán...");
+                btn.innerHTML = '<i class="fas fa-cog fa-spin text-blue-400"></i><span class="text-[9px] font-black uppercase">Enlazando...</span>';
                 
                 const device = await navigator.bluetooth.requestDevice({ 
                     acceptAllDevices: true, 
                     optionalServices: MASTER_UUIDS 
                 });
                 
-                log(`Socio Millán, vinculado con: ${device.name}`);
+                log(`Socio, detectado: ${device.name}`);
                 const server = await device.gatt.connect();
                 const services = await server.getPrimaryServices();
                 
+                // Discovery de canales dinámica para evitar el error de "No services"
                 for (const s of services) {
                     const chars = await s.getCharacteristics();
                     for (const c of chars) { if (c.properties.write || c.properties.notify) { obdChar = c; break; } }
                     if (obdChar) break;
                 }
 
-                if (!obdChar) throw new Error("Puerto de datos bloqueado.");
+                if (!obdChar) throw new Error("Hardware de datos bloqueado.");
 
                 if (obdChar.properties.notify) {
                     await obdChar.startNotifications();
@@ -262,23 +236,24 @@
                     });
                 }
 
-                document.getElementById('bt-led').className = "w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]";
-                document.getElementById('bt-status').innerText = "GS Online";
-                document.getElementById('bt-status').className = "text-[9px] font-bold text-cyan-400 uppercase tracking-widest";
-                btn.innerHTML = '<i class="fas fa-check-circle text-emerald-500"></i><span class="text-[9px] font-black uppercase">Enlazado</span>';
+                document.getElementById('bt-led').className = "w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_12px_#3b82f6]";
+                document.getElementById('bt-status').innerText = "VAG Online";
+                document.getElementById('bt-status').className = "text-[9px] font-bold text-blue-500 uppercase tracking-widest";
+                btn.innerHTML = '<i class="fas fa-check-double text-emerald-500"></i><span class="text-[9px] font-black uppercase">VINCULADO</span>';
                 
-                log("Protocolo GS detectado. Mandando ATZ.");
+                log("Enlace total. Mandando ATZ y ATSP0 para forzar protocolo.");
                 await btSend("ATZ");
-                await btSend("ATSP0"); // Protocolo Automático
+                await btSend("ATSP0"); // Protocolo Automático inteligente
             } catch (err) { 
-                log(`FALLO: ${err.message}`); 
-                btn.innerHTML = '<i class="fas fa-plug text-rose-500"></i><span class="text-[9px] font-black uppercase text-rose-500">Reintentar</span>';
+                log(`FALLO: ${err.message}`, 'sys'); 
+                btn.innerHTML = '<i class="fas fa-unlink text-rose-500"></i><span class="text-[9px] font-black uppercase text-rose-500">REINTENTAR</span>';
             }
         }
 
         async function btSend(cmd, wait = 0) {
             if (!obdChar) return;
             try {
+                // El ELM327 requiere retorno de carro \r
                 await obdChar.writeValue(new TextEncoder().encode(cmd + "\r"));
                 log(cmd, 'tx');
                 if (wait > 0) await new Promise(r => setTimeout(r, wait));
@@ -287,48 +262,57 @@
 
         function handleOBDResponse(data) {
             log(data, 'rx');
-            if (data.includes("43")) { // Respuesta de códigos de falla Modo 03
+            if (data.includes("43")) { // Respuesta Modo 03 (DTCs)
                 procesarFallas(data);
             }
         }
 
-        function escanearDTC() {
-            if (!obdChar) { alert("¡Socio! Primero enlaza el vLink."); return; }
-            log("Pidiendo DTCs al GS 2005 (Modo 03)...");
-            document.getElementById('no-faults-msg').innerHTML = '<i class="fas fa-cog fa-spin text-amber-500 text-2xl mb-2"></i><p class="text-[9px] text-amber-500 font-bold uppercase">Leyendo memoria...</p>';
-            btSend("03");
+        // --- LÓGICA DE DIAGNÓSTICO PROFUNDO ---
+        async function deepScanDTC() {
+            if (!obdChar) { alert("¡Socio! Primero conecta el Bluetooth."); return; }
+            log("Iniciando DEEP SCAN para VW Golf (DTCs)...");
+            document.getElementById('placeholder-msg').innerHTML = '<i class="fas fa-circle-notch fa-spin text-blue-500 text-3xl mb-2"></i><p class="text-[9px] text-blue-500 font-bold uppercase">Leyendo ECU VAG...</p>';
+            
+            // Secuencia maestra para forzar lectura si el 03 falló
+            await btSend("ATSP0"); // Forzar búsqueda de protocolo
+            setTimeout(() => { btSend("03"); }, 500); 
         }
 
         function procesarFallas(data) {
-            const container = document.getElementById('results-container');
-            const placeholder = document.getElementById('no-faults-msg');
+            const container = document.getElementById('fault-container');
+            const placeholder = document.getElementById('placeholder-msg');
             if(placeholder) placeholder.remove();
             
-            const parts = data.split(" ");
-            if (parts.length > 1 && parts[1] !== "00") {
-                const code = "P" + parts[1] + parts[2];
-                const card = document.createElement('div');
-                card.className = "glass p-4 fault-card flex justify-between items-center";
-                card.innerHTML = `
-                    <div>
-                        <span class="text-sm font-black text-rose-500 uppercase">${code}</span>
-                        <p class="text-[9px] text-slate-400 font-bold mt-1 uppercase">Falla Detectada en GS 2005</p>
-                    </div>
-                    <button onclick="switchTab('lab')" class="text-[8px] bg-rose-500/20 text-rose-500 px-3 py-1 rounded-full font-black uppercase">Ver Pieza</button>
-                `;
-                container.appendChild(card);
+            // Decodificador básico para respuestas tipo "43 01 33" -> P0133
+            const rawCodes = data.replace(/43/g, "").trim().split(" ");
+            if (rawCodes[0] === "00") {
+                container.innerHTML += '<div class="text-center py-6 text-emerald-500 font-black text-[10px] uppercase italic">✓ No se hallaron fallas en la Golf</div>';
             } else {
-                container.innerHTML += '<div class="text-center py-4 text-emerald-500 font-black text-[10px] uppercase italic">✓ Sin fallas activas</div>';
+                mostrarTarjetaFalla("P" + rawCodes[0] + (rawCodes[1] || "00"));
             }
         }
 
-        function borrarFallas() {
+        function mostrarTarjetaFalla(code) {
+            const container = document.getElementById('fault-container');
+            const card = document.createElement('div');
+            card.className = "glass p-4 fault-item flex justify-between items-center";
+            card.innerHTML = `
+                <div>
+                    <span class="text-sm font-black text-rose-500 uppercase tracking-tighter">${code}</span>
+                    <p class="text-[9px] text-slate-400 font-bold mt-1 uppercase italic">Falla Detectada en VW Golf</p>
+                </div>
+                <button onclick="switchTab('arch')" class="text-[8px] bg-rose-500/20 text-rose-500 px-3 py-1 rounded-full font-black uppercase">Inspección 3D</button>
+            `;
+            container.appendChild(card);
+        }
+
+        function borrarDTC() {
             if(!obdChar) return;
-            if(confirm("¿Seguro carnal? Limpiarás el Check Engine del GS.")){
-                log("Enviando comando de borrado Modo 04...");
+            if(confirm("¿Seguro carnal? Limpiarás el Check Engine de la Golf.")){
+                log("Enviando borrado maestro (Modo 04)...");
                 btSend("04");
                 setTimeout(() => {
-                    document.getElementById('results-container').innerHTML = '<h3 class="text-[10px] font-black text-slate-500 uppercase px-2 tracking-widest">Fallas en Memoria ECU</h3><div id="no-faults-msg" class="text-center py-6 border-2 border-dashed border-slate-800 rounded-3xl"><i class="fas fa-check-circle text-emerald-500 text-2xl mb-2"></i><p class="text-[9px] text-emerald-500 font-bold uppercase">Memoria de GS Limpia</p></div>';
+                    document.getElementById('fault-container').innerHTML = '<h3 class="text-[10px] font-black text-slate-500 uppercase px-2 tracking-widest italic">Códigos Encontrados</h3><div id="placeholder-msg" class="text-center py-10 border-2 border-dashed border-slate-800 rounded-3xl"><i class="fas fa-check-circle text-emerald-500 text-3xl mb-2"></i><p class="text-[9px] text-emerald-500 font-bold uppercase">Memoria de Golf Limpia</p></div>';
                 }, 1500);
             }
         }
@@ -360,7 +344,7 @@
             renderer.setPixelRatio(window.devicePixelRatio);
             viewport.appendChild(renderer.domElement);
 
-            const pLight = new THREE.PointLight(0x22d3ee, 5, 100); pLight.position.set(10, 10, 10);
+            const pLight = new THREE.PointLight(0x3b82f6, 5, 100); pLight.position.set(10, 10, 10);
             scene.add(pLight); scene.add(new THREE.AmbientLight(0x404040, 1.5));
             camera.position.z = 5;
 
@@ -378,13 +362,13 @@
 
         function update3D(type) {
             if (currentObject) scene.remove(currentObject);
-            const material = new THREE.MeshPhongMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.8, emissive: 0x22d3ee, emissiveIntensity: 0.6 });
+            const material = new THREE.MeshPhongMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.8, emissive: 0x3b82f6, emissiveIntensity: 0.6 });
             let geometry; const nameLabel = document.getElementById('proj-name');
             
             if (type === 'engine') {
-                geometry = new THREE.IcosahedronGeometry(2, 1); nameLabel.innerText = "Diagrama de Motor 2005";
-            } else if (type === 'generator') {
-                geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 150, 20); nameLabel.innerText = "Alternador Propart";
+                geometry = new THREE.IcosahedronGeometry(2, 1); nameLabel.innerText = "Diagrama de Bloque Motor VW";
+            } else if (type === 'sensor') {
+                geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 150, 20); nameLabel.innerText = "Esquema Sensor MAF/MAP";
                 material.color.setHex(0xfbbf24); material.emissive.setHex(0xfbbf24);
             }
             
@@ -397,9 +381,7 @@
             renderer.render(scene, camera);
         }
 
-        window.onload = function() {
-            initThreeJS();
-        };
+        window.onload = initThreeJS;
     </script>
 </body>
 </html>
