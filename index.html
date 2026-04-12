@@ -1,494 +1,1438 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0e27">
-    <meta name="description" content="Sistema profesional de diagnóstico automotriz con conexión Bluetooth ELM327, códigos DTC, diagramas y pinouts ECU">
-    <meta name="keywords" content="diagnóstico automotriz, ELM327, OBD2, scanner, códigos DTC, diagramas eléctricos, pinout ECU">
-    <meta name="author" content="Fernando Millán - PROPART DIAGNOSTIC">
-    
-    <title>PROPART DIAGNOSTIC PRO - Sistema Profesional de Diagnóstico</title>
-    
-    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/engine.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/engine.png">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap');
-        
-        * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: #e2e8f0; 
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-        }
-        
-        .orbitron { font-family: 'Orbitron', sans-serif; }
-        
-        .glass {
-            background: rgba(19, 24, 41, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        
-        .glow { box-shadow: 0 0 20px rgba(0,212,255,0.4), 0 0 40px rgba(0,212,255,0.2); }
-        
-        .header-pro {
-            background: linear-gradient(180deg, rgba(19,24,41,0.98) 0%, rgba(10,14,39,0.95) 100%);
-            border-bottom: 2px solid #06b6d4;
-            box-shadow: 0 4px 20px rgba(0,212,255,0.2);
-        }
-        
-        .btn-pro {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            border: 1px solid rgba(0,212,255,0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .btn-pro:active { transform: scale(0.95); box-shadow: 0 0 25px rgba(0,212,255,0.6); }
-        
-        .card-sensor {
-            background: linear-gradient(135deg, rgba(30,58,138,0.3) 0%, rgba(30,64,175,0.2) 100%);
-            border: 1px solid rgba(0,212,255,0.2);
-            border-left: 4px solid #06b6d4;
-        }
-        
-        .data-display {
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-shadow: 0 0 10px currentColor;
-        }
-        
-        .hidden { display: none !important; }
-        
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 100;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        
-        .tab-btn {
-            padding: 0.75rem 1.5rem;
-            background: #1e293b;
-            color: #94a3b8;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(90deg, #06b6d4, #3b82f6);
-            color: white;
-        }
-        
-        input, select {
-            background: rgba(19,24,41,0.8);
-            border: 1px solid #334155;
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            width: 100%;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #06b6d4;
-            box-shadow: 0 0 15px rgba(6,182,212,0.3);
-        }
-        
-        .injector-bar {
-            height: 12px;
-            background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%);
-            border-radius: 6px;
-            transition: width 0.3s;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OilMaster — Conduce con Precaución</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg: #07090F;
+  --bg2: #0C1018;
+  --bg3: #111722;
+  --card: #0E1420;
+  --card2: #131B2A;
+  --amber: #F59E0B;
+  --amber-dim: #B45309;
+  --red: #EF4444;
+  --red-glow: rgba(239,68,68,0.25);
+  --green: #10B981;
+  --green-glow: rgba(16,185,129,0.2);
+  --blue: #3B82F6;
+  --blue-glow: rgba(59,130,246,0.2);
+  --white: #F1F5F9;
+  --gray: #8B9DB7;
+  --gray2: #5A6A80;
+  --border: #1C2840;
+  --border2: #253350;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--white);
+  min-height:100vh;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  overflow-x:hidden;
+}
+
+.screen { display:none; min-height:100vh; padding-bottom:90px; }
+.screen.active { display:block; animation:fadeIn 0.3s; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══ SPLASH ═══ */
+#splash {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100vh; text-align:center; padding:30px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(245,158,11,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse at 50% 80%, rgba(239,68,68,0.05) 0%, transparent 60%),
+              var(--bg);
+}
+.splash-icon { width:120px; height:120px; margin-bottom:24px; }
+.splash-icon svg { width:100%; height:100%; }
+.splash-title {
+  font-family:'Orbitron',sans-serif; font-size:36px; font-weight:900; letter-spacing:3px;
+  background: linear-gradient(135deg, var(--amber), #FBBF24, var(--amber));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.splash-sub { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--gray); letter-spacing:4px; margin-top:4px; text-transform:uppercase; }
+.splash-msg {
+  margin-top:30px; padding:16px 24px;
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06));
+  border: 1px solid rgba(245,158,11,0.2); border-radius:12px; max-width:320px;
+}
+.splash-msg p { font-size:15px; color:var(--amber); line-height:1.5; font-weight:500; }
+.splash-msg .heart { color:var(--red); font-size:18px; }
+.splash-btn {
+  margin-top:30px; background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+  color:#000; border:none; font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700;
+  letter-spacing:2px; padding:14px 40px; border-radius:50px; cursor:pointer;
+  transition:all 0.3s; box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+}
+.splash-btn:active { transform:scale(0.96); }
+.splash-version { margin-top:16px; font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--gray2); }
+
+/* ═══ HEADER ═══ */
+.header {
+  padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg2); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;
+}
+.header-brand { display:flex; align-items:center; gap:8px; }
+.header-logo { width:28px; height:28px; }
+.header-title { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; color:var(--amber); letter-spacing:1px; }
+.header-status { font-family:'Share Tech Mono',monospace; font-size:10px; padding:4px 10px; border-radius:20px; border:1px solid var(--border); color:var(--gray); }
+.header-status.connected { border-color:var(--green); color:var(--green); }
+
+.safety-banner {
+  background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(239,68,68,0.08), rgba(245,158,11,0.1));
+  border-bottom:1px solid rgba(245,158,11,0.15); padding:8px 16px;
+  text-align:center; font-size:12px; color:var(--amber); font-weight:500; letter-spacing:0.5px;
+}
+.safety-banner .heart { color:var(--red); }
+
+/* ═══ MODULE GRID ═══ */
+.module-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; }
+.mod-tile {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:20px 14px; text-align:center; cursor:pointer; transition:all 0.3s;
+  position:relative; overflow:hidden;
+}
+.mod-tile::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent); opacity:0; transition:opacity 0.3s;
+}
+.mod-tile:active { transform:scale(0.97); }
+.mod-tile:active::before { opacity:1; }
+.mod-tile .icon { font-size:36px; margin-bottom:8px; display:block; }
+.mod-tile .name { font-family:'Orbitron',sans-serif; font-size:11px; font-weight:600; color:var(--white); letter-spacing:1px; margin-bottom:4px; }
+.mod-tile .desc { font-size:12px; color:var(--gray); line-height:1.3; }
+.mod-tile.sos {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05));
+  border-color: rgba(239,68,68,0.4);
+}
+.mod-tile.sos .icon { font-size:42px; }
+.mod-tile.sos .name { color:var(--red); font-size:14px; }
+
+.screen-header { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid var(--border); }
+.back-btn {
+  width:36px; height:36px; background:var(--card); border:1px solid var(--border);
+  border-radius:10px; color:var(--white); font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.back-btn:active { background:var(--border); }
+.screen-title { font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700; color:var(--amber); letter-spacing:1px; }
+.content { padding:16px; }
+
+/* ═══ AUDIO RECORDER ═══ */
+.recorder-area {
+  background: radial-gradient(circle at 50% 50%, rgba(245,158,11,0.06), transparent 70%), var(--card);
+  border:1px solid var(--border); border-radius:16px; padding:30px 20px; text-align:center; margin-bottom:16px;
+}
+.rec-btn {
+  width:100px; height:100px; border-radius:50%; border:3px solid var(--amber);
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+  color:var(--amber); font-size:36px; cursor:pointer; transition:all 0.3s;
+  display:flex; align-items:center; justify-content:center; margin:0 auto; position:relative;
+}
+.rec-btn.recording { border-color:var(--red); background: radial-gradient(circle, rgba(239,68,68,0.2), transparent); color:var(--red); animation:pulse-rec 1.5s ease-in-out infinite; }
+@keyframes pulse-rec { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)} 50%{box-shadow:0 0 0 20px rgba(239,68,68,0)} }
+.rec-label { margin-top:14px; font-family:'Share Tech Mono',monospace; font-size:13px; color:var(--gray); }
+.rec-timer { font-family:'Share Tech Mono',monospace; font-size:24px; color:var(--amber); margin-top:8px; }
+.waveform { display:flex; align-items:center; justify-content:center; gap:3px; height:50px; margin-top:16px; }
+.waveform .bar { width:4px; background:var(--amber); border-radius:2px; transition:height 0.1s; opacity:0.6; }
+
+/* ═══ FORMS ═══ */
+.form-group { margin-bottom:14px; }
+.form-label { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:block; }
+.form-input,.form-select,.form-textarea { width:100%; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--white); font-family:'Rajdhani',sans-serif; font-size:15px; outline:none; transition:border-color 0.3s; }
+.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--amber); }
+.form-textarea { min-height:80px; resize:vertical; }
+.form-select option { background:var(--bg); }
+
+.chip-group { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+.chip { font-family:'Share Tech Mono',monospace; font-size:12px; padding:6px 14px; border-radius:20px; border:1px solid var(--border); color:var(--gray); cursor:pointer; transition:all 0.2s; background:var(--card); }
+.chip:active,.chip.selected { border-color:var(--amber); color:var(--amber); background:rgba(245,158,11,0.1); }
+
+.result-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; display:none; }
+.result-card.visible { display:block; animation:fadeIn 0.4s; }
+.severity-badge { display:inline-flex; align-items:center; gap:6px; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:700; padding:6px 14px; border-radius:8px; letter-spacing:1px; }
+.severity-green { background:rgba(16,185,129,0.15); color:var(--green); border:1px solid rgba(16,185,129,0.3); }
+.severity-yellow { background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid rgba(245,158,11,0.3); }
+.severity-red { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+.result-title { font-size:17px; font-weight:600; color:var(--white); margin:12px 0 8px; }
+.result-desc { font-size:14px; color:var(--gray); line-height:1.6; }
+.result-actions { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+.action-btn { flex:1; min-width:120px; padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:var(--card2); color:var(--white); font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; cursor:pointer; text-align:center; transition:all 0.2s; }
+.action-btn:active { transform:scale(0.97); }
+.action-btn.primary { background:var(--amber); color:#000; border-color:var(--amber); }
+.action-btn.danger { background:var(--red); color:#fff; border-color:var(--red); }
+
+/* ═══ CAMERA ═══ */
+.camera-area { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px; position:relative; }
+.camera-preview { width:100%; aspect-ratio:4/3; background: linear-gradient(135deg, #0A1020, #0D1525); display:flex; align-items:center; justify-content:center; position:relative; }
+.camera-preview .placeholder { text-align:center; color:var(--gray2); }
+.camera-preview .placeholder .cam-icon { font-size:48px; margin-bottom:8px; }
+.camera-overlay { position:absolute; top:0;left:0;right:0;bottom:0; border:2px dashed rgba(245,158,11,0.3); margin:20px; border-radius:8px; display:flex; align-items:flex-end; justify-content:center; padding:10px; }
+.camera-overlay span { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); background:rgba(0,0,0,0.6); padding:3px 10px; border-radius:4px; }
+.camera-controls { display:flex; gap:10px; padding:12px; justify-content:center; }
+.cam-btn { width:50px; height:50px; border-radius:50%; border:2px solid var(--border); background:var(--card2); color:var(--white); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.cam-btn.capture { width:60px; height:60px; border-color:var(--amber); background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05)); }
+
+/* ═══ WORKSHOP / SHOP / CONTACT ═══ */
+.workshop-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; display:flex; gap:12px; align-items:center; cursor:pointer; transition:border-color 0.2s; }
+.workshop-card:active { border-color:var(--amber); }
+.ws-dist { min-width:50px; text-align:center; }
+.ws-dist .km { font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; color:var(--amber); }
+.ws-dist .unit { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--gray); }
+.ws-info h4 { font-size:15px; font-weight:600; color:var(--white); margin-bottom:2px; }
+.ws-info p { font-size:12px; color:var(--gray); }
+.ws-rating { margin-left:auto; color:var(--amber); font-size:13px; font-weight:600; }
+.part-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.part-info h4 { font-size:14px; color:var(--white); margin-bottom:2px; }
+.part-info p { font-size:12px; color:var(--gray); }
+.part-price { font-family:'Orbitron',sans-serif; font-size:16px; color:var(--green); font-weight:700; }
+.part-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--green); background:rgba(16,185,129,0.1); color:var(--green); font-size:12px; font-weight:600; cursor:pointer; margin-top:6px; }
+.contact-card { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(59,130,246,0.05)); border:1px solid rgba(245,158,11,0.2); border-radius:14px; padding:18px; text-align:center; margin:16px 0; }
+.contact-avatar { width:60px; height:60px; border-radius:50%; background: linear-gradient(135deg, var(--amber), var(--amber-dim)); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 10px; }
+.contact-name { font-size:16px; font-weight:600; color:var(--white); }
+.contact-role { font-size:12px; color:var(--amber); font-family:'Share Tech Mono',monospace; }
+.contact-actions { display:flex; gap:10px; margin-top:12px; justify-content:center; }
+.contact-btn { padding:10px 20px; border-radius:10px; border:none; font-size:14px; font-weight:600; cursor:pointer; font-family:'Rajdhani',sans-serif; }
+.contact-btn.call { background:var(--green); color:#fff; }
+.contact-btn.msg { background:var(--blue); color:#fff; }
+
+.info-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.info-row:last-child { border-bottom:none; }
+.info-row .label { font-size:13px; color:var(--gray); }
+.info-row .value { font-size:13px; color:var(--white); font-weight:600; }
+.sec-label { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; padding:0 4px; }
+.divider { height:1px; background:var(--border); margin:16px 0; }
+
+/* ═══════════════════════════════════════ */
+/* SOS ENHANCED TRUST SYSTEM              */
+/* ═══════════════════════════════════════ */
+
+/* FULL SCREEN EMERGENCY MODE */
+.sos-fullscreen {
+  display:none;
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  z-index:9999;
+  flex-direction:column;
+  overflow-y:auto;
+}
+
+.sos-fullscreen.active { display:flex; }
+
+/* Phase backgrounds */
+.sos-phase-sending {
+  background: var(--bg);
+  animation: bgPulseRed 2s ease-in-out infinite;
+}
+
+.sos-phase-received {
+  background: var(--bg);
+  animation: bgPulseAmber 3s ease-in-out infinite;
+}
+
+.sos-phase-confirmed {
+  background: var(--bg);
+  animation: bgPulseGreen 4s ease-in-out infinite;
+}
+
+.sos-phase-beacon {
+  animation: beaconFlash 1.5s ease-in-out infinite;
+}
+
+@keyframes bgPulseRed {
+  0%,100% { background:var(--bg); }
+  50% { background: #120808; box-shadow: inset 0 0 100px rgba(239,68,68,0.15); }
+}
+
+@keyframes bgPulseAmber {
+  0%,100% { background:var(--bg); }
+  50% { background: #120E05; box-shadow: inset 0 0 80px rgba(245,158,11,0.1); }
+}
+
+@keyframes bgPulseGreen {
+  0%,100% { background:var(--bg); }
+  50% { background: #061210; box-shadow: inset 0 0 80px rgba(16,185,129,0.08); }
+}
+
+@keyframes beaconFlash {
+  0%,100% { background: #07090F; }
+  15% { background: #EF4444; }
+  30% { background: #07090F; }
+  45% { background: #F59E0B; }
+  60% { background: #07090F; }
+}
+
+/* SOS Top Bar */
+.sos-top-bar {
+  padding:12px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(239,68,68,0.3);
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(10px);
+  position:sticky; top:0; z-index:10;
+}
+
+.sos-top-bar .sos-badge {
+  font-family:'Orbitron',sans-serif;
+  font-size:12px; font-weight:700;
+  color:var(--red);
+  letter-spacing:2px;
+  display:flex; align-items:center; gap:8px;
+}
+
+.sos-live-dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--red);
+  animation: liveDot 1s ease-in-out infinite;
+}
+
+@keyframes liveDot {
+  0%,100% { opacity:1; }
+  50% { opacity:0.3; }
+}
+
+.sos-live-dot.green { background:var(--green); }
+.sos-live-dot.amber { background:var(--amber); }
+
+.sos-signal-bars {
+  display:flex; align-items:flex-end; gap:2px; height:16px;
+}
+
+.sos-signal-bars .bar {
+  width:4px; border-radius:1px;
+  background:var(--gray2);
+  transition:all 0.5s;
+}
+
+.sos-signal-bars .bar.active { background:var(--green); }
+.sos-signal-bars .bar:nth-child(1) { height:4px; }
+.sos-signal-bars .bar:nth-child(2) { height:7px; }
+.sos-signal-bars .bar:nth-child(3) { height:10px; }
+.sos-signal-bars .bar:nth-child(4) { height:14px; }
+
+/* FOLIO */
+.sos-folio {
+  text-align:center; padding:16px;
+}
+
+.sos-folio-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px; color:var(--gray2);
+  letter-spacing:3px; text-transform:uppercase;
+}
+
+.sos-folio-number {
+  font-family:'Orbitron',sans-serif;
+  font-size:22px; font-weight:700;
+  color:var(--amber);
+  letter-spacing:3px;
+  margin-top:4px;
+}
+
+/* MAIN STATUS */
+.sos-main-status {
+  text-align:center;
+  padding:20px 16px;
+  flex-shrink:0;
+}
+
+.sos-ring {
+  width:140px; height:140px;
+  border-radius:50%;
+  margin:0 auto;
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+}
+
+.sos-ring-outer {
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  border-radius:50%;
+  border:3px solid var(--red);
+  animation: ringPulse 2s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%,100% { transform:scale(1); opacity:1; box-shadow:0 0 0 0 rgba(239,68,68,0.4); }
+  50% { transform:scale(1.08); opacity:0.8; box-shadow:0 0 0 20px rgba(239,68,68,0); }
+}
+
+.sos-ring-outer.amber { border-color:var(--amber); animation-name:ringPulseAmber; }
+@keyframes ringPulseAmber {
+  0%,100% { transform:scale(1); opacity:1; box-shadow:0 0 0 0 rgba(245,158,11,0.4); }
+  50% { transform:scale(1.08); opacity:0.8; box-shadow:0 0 0 20px rgba(245,158,11,0); }
+}
+
+.sos-ring-outer.green { border-color:var(--green); animation-name:ringPulseGreen; }
+@keyframes ringPulseGreen {
+  0%,100% { transform:scale(1); opacity:1; box-shadow:0 0 0 0 rgba(16,185,129,0.4); }
+  50% { transform:scale(1.06); opacity:0.8; box-shadow:0 0 0 15px rgba(16,185,129,0); }
+}
+
+.sos-ring .status-icon { font-size:42px; position:relative; z-index:2; }
+.sos-ring .status-text {
+  font-family:'Orbitron',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:2px;
+  margin-top:4px;
+  position:relative; z-index:2;
+}
+
+.sos-main-label {
+  font-size:18px; font-weight:700;
+  color:var(--white);
+  margin-top:16px;
+}
+
+.sos-main-sublabel {
+  font-size:13px; color:var(--gray);
+  margin-top:4px;
+}
+
+/* TIMELINE */
+.sos-timeline {
+  padding:0 20px;
+  margin:16px 0;
+}
+
+.timeline-step {
+  display:flex; gap:12px;
+  padding-bottom:20px;
+  position:relative;
+}
+
+.timeline-step:not(:last-child)::before {
+  content:'';
+  position:absolute;
+  left:15px; top:32px; bottom:0;
+  width:2px;
+  background:var(--border);
+}
+
+.timeline-step.done:not(:last-child)::before { background:var(--green); }
+.timeline-step.active:not(:last-child)::before { background: linear-gradient(to bottom, var(--amber), var(--border)); }
+
+.timeline-dot {
+  width:32px; height:32px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+  border:2px solid var(--border);
+  background:var(--card);
+  transition:all 0.5s;
+}
+
+.timeline-step.done .timeline-dot { border-color:var(--green); background:rgba(16,185,129,0.15); }
+.timeline-step.active .timeline-dot { border-color:var(--amber); background:rgba(245,158,11,0.15); animation:dotPulse 1.5s ease-in-out infinite; }
+.timeline-step.waiting .timeline-dot { opacity:0.4; }
+
+@keyframes dotPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0.3); }
+  50% { box-shadow:0 0 0 8px rgba(245,158,11,0); }
+}
+
+.timeline-content { flex:1; }
+.timeline-title { font-size:14px; font-weight:600; color:var(--white); }
+.timeline-step.waiting .timeline-title { color:var(--gray2); }
+.timeline-time { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--gray2); margin-top:2px; }
+.timeline-detail { font-size:12px; color:var(--gray); margin-top:4px; line-height:1.4; }
+
+.timeline-step.done .timeline-title { color:var(--green); }
+.timeline-step.active .timeline-title { color:var(--amber); }
+
+/* KEEPALIVE INDICATOR */
+.sos-keepalive {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 16px;
+  margin:0 16px;
+  background:rgba(16,185,129,0.05);
+  border:1px solid rgba(16,185,129,0.15);
+  border-radius:10px;
+}
+
+.keepalive-ping {
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--green);
+  animation:keepPing 3s ease-in-out infinite;
+}
+
+@keyframes keepPing {
+  0% { opacity:1; transform:scale(1); }
+  10% { opacity:1; transform:scale(1.5); }
+  20% { opacity:0.6; transform:scale(1); }
+  100% { opacity:0.6; transform:scale(1); }
+}
+
+.keepalive-text {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; color:var(--green);
+}
+
+/* ETA COUNTDOWN */
+.sos-eta-box {
+  margin:16px;
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  display:none;
+}
+
+.sos-eta-box.visible { display:block; animation:fadeIn 0.5s; }
+
+.eta-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px; color:var(--gray);
+  text-transform:uppercase; letter-spacing:2px;
+}
+
+.eta-time {
+  font-family:'Orbitron',sans-serif;
+  font-size:40px; font-weight:900;
+  color:var(--amber);
+  margin:8px 0;
+}
+
+.eta-unit {
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px; color:var(--gray2);
+}
+
+.eta-grua-info {
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+
+.eta-grua-info .g-row {
+  display:flex; justify-content:space-between;
+  padding:4px 0;
+  font-size:13px;
+}
+
+.eta-grua-info .g-label { color:var(--gray); }
+.eta-grua-info .g-value { color:var(--white); font-weight:600; }
+
+/* BEACON BUTTON */
+.sos-beacon-btn {
+  margin:16px;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(245,158,11,0.3);
+  background:rgba(245,158,11,0.05);
+  color:var(--amber);
+  font-family:'Orbitron',sans-serif;
+  font-size:13px; font-weight:600;
+  letter-spacing:1px;
+  cursor:pointer;
+  text-align:center;
+  transition:all 0.3s;
+}
+
+.sos-beacon-btn.active-beacon {
+  background:rgba(245,158,11,0.2);
+  border-color:var(--amber);
+  animation:beaconBtnPulse 1s ease-in-out infinite;
+}
+
+@keyframes beaconBtnPulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0.3); }
+  50% { box-shadow:0 0 0 10px rgba(245,158,11,0); }
+}
+
+/* SOS BOTTOM */
+.sos-bottom {
+  padding:16px;
+  padding-bottom:max(16px, env(safe-area-inset-bottom));
+}
+
+.sos-cancel-btn {
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(239,68,68,0.4);
+  background:rgba(239,68,68,0.1);
+  color:var(--red);
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px; font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.sos-cancel-btn:active { background:rgba(239,68,68,0.2); }
+
+/* CALLBACK NOTIFICATION */
+.sos-callback-notif {
+  display:none;
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:10000;
+  padding:0;
+  animation:slideDown 0.5s ease-out;
+}
+
+.sos-callback-notif.visible { display:block; }
+
+@keyframes slideDown {
+  from { transform:translateY(-100%); }
+  to { transform:translateY(0); }
+}
+
+.callback-card {
+  margin:10px;
+  background: linear-gradient(135deg, #0A2E1A, #0D1A12);
+  border:2px solid var(--green);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 8px 40px rgba(16,185,129,0.3);
+}
+
+.callback-header {
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:10px;
+}
+
+.callback-avatar {
+  width:44px; height:44px;
+  border-radius:50%;
+  background:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px;
+}
+
+.callback-from {
+  font-size:15px; font-weight:700; color:var(--white);
+}
+
+.callback-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; color:var(--green);
+  letter-spacing:1px;
+}
+
+.callback-msg {
+  font-size:14px; color:var(--gray);
+  line-height:1.5;
+  padding:10px;
+  background:rgba(16,185,129,0.05);
+  border-radius:8px;
+  margin-bottom:12px;
+}
+
+.callback-actions {
+  display:flex; gap:8px;
+}
+
+.callback-actions button {
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  font-size:15px; font-weight:700;
+  cursor:pointer;
+  font-family:'Rajdhani',sans-serif;
+}
+
+.callback-actions .accept { background:var(--green); color:#fff; }
+.callback-actions .decline { background:var(--card); color:var(--gray); border:1px solid var(--border); }
+
+/* ═══ SOS PRE-LAUNCH ═══ */
+.sos-pre { text-align:center; padding:20px; }
+.sos-big-btn {
+  width:160px; height:160px; border-radius:50%;
+  border:4px solid var(--red);
+  background: radial-gradient(circle at 40% 40%, rgba(239,68,68,0.25), rgba(239,68,68,0.05));
+  color:var(--red); font-family:'Orbitron',sans-serif; font-size:20px; font-weight:900;
+  letter-spacing:3px; cursor:pointer; margin:20px auto;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  transition:all 0.3s; box-shadow:0 0 40px rgba(239,68,68,0.15);
+}
+.sos-big-btn:active { transform:scale(0.95); box-shadow:0 0 60px rgba(239,68,68,0.3); }
+.sos-big-btn .sos-icon { font-size:40px; margin-bottom:4px; }
+.sos-info { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-top:16px; text-align:left; }
+.sos-info h4 { font-family:'Orbitron',sans-serif; font-size:12px; color:var(--amber); letter-spacing:1px; margin-bottom:8px; }
+.sos-info p { font-size:13px; color:var(--gray); line-height:1.5; }
+
+/* ═══ NAVBAR ═══ */
+.navbar {
+  position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:480px; background:var(--bg2);
+  border-top:1px solid var(--border); display:flex; z-index:100;
+  padding:6px 0; padding-bottom: max(6px, env(safe-area-inset-bottom));
+}
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:6px 0; color:var(--gray2); font-size:10px; cursor:pointer; transition:color 0.2s;
+  text-decoration:none; border:none; background:none; font-family:'Rajdhani',sans-serif;
+  font-weight:600; letter-spacing:0.5px;
+}
+.nav-item.active { color:var(--amber); }
+.nav-item .nav-icon { font-size:22px; margin-bottom:2px; }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <div class="header-pro p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center glow">
-                <i class="fas fa-microchip text-white text-2xl"></i>
-            </div>
-            <div>
-                <h1 class="orbitron font-black text-base text-white">PROPART</h1>
-                <p class="text-[10px] text-cyan-400 font-bold tracking-widest">DIAGNOSTIC PRO</p>
-            </div>
-        </div>
-        <div class="flex gap-3 items-center">
-            <button id="bt-status" class="text-gray-500 transition">
-                <i class="fas fa-bluetooth text-2xl"></i>
-            </button>
-            <button onclick="toggleCart()" class="relative">
-                <i class="fas fa-shopping-cart text-white text-xl"></i>
-                <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
-            </button>
-        </div>
+<!-- ═══ SPLASH ═══ -->
+<div class="screen active" id="splash">
+  <div class="splash-icon">
+    <svg viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="56" stroke="#F59E0B" stroke-width="2" stroke-dasharray="8 4" opacity="0.3"/>
+      <circle cx="60" cy="60" r="42" stroke="#F59E0B" stroke-width="1.5" opacity="0.15"/>
+      <path d="M50 40 C38 40 30 52 30 65 C30 78 38 88 50 88 L55 88 C55 88 55 80 50 75 C45 70 42 65 42 60 C42 52 48 48 55 48" stroke="#F59E0B" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M62 50 C68 54 72 60 72 66 C72 72 68 78 62 82" stroke="#F59E0B" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+      <path d="M68 44 C78 50 84 58 84 66 C84 74 78 82 68 88" stroke="#F59E0B" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <path d="M74 38 C86 46 92 56 92 66 C92 76 86 86 74 94" stroke="#F59E0B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.3"/>
+      <path d="M82 34 L90 26 M86 30 L92 36" stroke="#EF4444" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+  </div>
+  <div class="splash-title">OilMaster</div>
+  <div class="splash-sub">Diagnóstico Inteligente</div>
+  <div class="splash-msg">
+    <p><span class="heart">❤</span> Conduce con precaución.<br>Recuerda que eres importante,<br><strong>tu familia te espera.</strong></p>
+  </div>
+  <button class="splash-btn" onclick="goScreen('home')">INICIAR</button>
+  <div class="splash-version">PRO PART SYSTEM V12 — v2.0<br>Hecho en México 🇲🇽</div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div class="screen" id="home">
+  <div class="header">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" stroke="#F59E0B" stroke-width="1.5" fill="none"/><path d="M10 10C8 10 7 13 7 15C7 17.5 9 19 10 19" stroke="#F59E0B" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M14 11C16 12.5 17 14 17 15.5C17 17 16 18 14 19" stroke="#F59E0B" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/></svg>
+      <span class="header-title">OILMASTER</span>
     </div>
+    <div class="header-status" id="connStatus">OFFLINE</div>
+  </div>
+  <div class="safety-banner"><span class="heart">❤</span> Conduce con precaución — Tu familia te espera</div>
+  <div class="module-grid">
+    <div class="mod-tile" onclick="goScreen('audio')"><span class="icon">👂</span><div class="name">OÍDO MASTER</div><div class="desc">Analiza sonidos del motor</div></div>
+    <div class="mod-tile" onclick="goScreen('visual')"><span class="icon">📷</span><div class="name">VISIÓN</div><div class="desc">Inspección visual con cámara</div></div>
+    <div class="mod-tile" onclick="goScreen('diagnostic')"><span class="icon">🔌</span><div class="name">OBD2</div><div class="desc">Scanner con ELM327</div></div>
+    <div class="mod-tile" onclick="goScreen('workshops')"><span class="icon">🔧</span><div class="name">TALLERES</div><div class="desc">Encuentra talleres cerca</div></div>
+    <div class="mod-tile" onclick="goScreen('shop')"><span class="icon">🏪</span><div class="name">REFACCIONES</div><div class="desc">Compra partes eléctricas</div></div>
+    <div class="mod-tile" onclick="goScreen('mechanic')"><span class="icon">👨‍🔧</span><div class="name">TÉCNICO</div><div class="desc">Contacta un mecánico</div></div>
+    <div class="mod-tile sos" onclick="goScreen('sos')"><span class="icon">🆘</span><div class="name">EMERGENCIA SOS</div><div class="desc">Alerta con ubicación a grúas cercanas — confirmación garantizada</div></div>
+  </div>
+  <div style="padding:0 16px 16px">
+    <div class="sec-label">Estado del vehículo</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="info-row"><span class="label">VIN</span><span class="value" id="currentVin">No escaneado</span></div>
+      <div class="info-row"><span class="label">Último diagnóstico</span><span class="value" id="lastDiag">—</span></div>
+      <div class="info-row"><span class="label">Alertas activas</span><span class="value" style="color:var(--green)" id="alertCount">0</span></div>
+    </div>
+  </div>
+</div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div id="main-content" class="p-4 pb-24">
+<!-- ═══ OÍDO MASTER ═══ -->
+<div class="screen" id="audio">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">OÍDO MASTER</div></div>
+  <div class="content">
+    <div class="recorder-area">
+      <p style="font-size:14px;color:var(--gray);margin-bottom:16px;">Acerca el teléfono al motor y graba el sonido de la falla</p>
+      <button class="rec-btn" id="recBtn" onclick="toggleRecord()"><span id="recIcon">🎤</span></button>
+      <div class="rec-label" id="recLabel">TOCA PARA GRABAR</div>
+      <div class="rec-timer" id="recTimer">00:00</div>
+      <div class="waveform" id="waveform"></div>
+    </div>
+    <div class="sec-label">Describe lo que escuchas</div>
+    <div class="chip-group" id="soundChips">
+      <span class="chip" onclick="toggleChip(this)">Golpeteo</span><span class="chip" onclick="toggleChip(this)">Chirrido</span>
+      <span class="chip" onclick="toggleChip(this)">Zumbido</span><span class="chip" onclick="toggleChip(this)">Rechinido</span>
+      <span class="chip" onclick="toggleChip(this)">Vibración</span><span class="chip" onclick="toggleChip(this)">Silbido</span>
+      <span class="chip" onclick="toggleChip(this)">Traqueteo</span><span class="chip" onclick="toggleChip(this)">Cascabeleo</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">¿De dónde viene el ruido?</label>
+      <select class="form-select" id="soundLocation">
+        <option value="">Selecciona zona...</option><option>Motor — Parte superior</option><option>Motor — Parte inferior</option>
+        <option>Transmisión</option><option>Ruedas delanteras</option><option>Ruedas traseras</option>
+        <option>Suspensión</option><option>Escape</option><option>Frenos</option><option>Dirección</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">¿Cuándo se escucha?</label>
+      <div class="chip-group">
+        <span class="chip" onclick="toggleChip(this)">Al encender</span><span class="chip" onclick="toggleChip(this)">En ralentí</span>
+        <span class="chip" onclick="toggleChip(this)">Al acelerar</span><span class="chip" onclick="toggleChip(this)">Al frenar</span>
+        <span class="chip" onclick="toggleChip(this)">Al girar</span><span class="chip" onclick="toggleChip(this)">Siempre</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Detalles adicionales</label>
+      <textarea class="form-textarea" placeholder="Describe la falla con tus palabras..."></textarea>
+    </div>
+    <button class="action-btn primary" style="width:100%;padding:14px;font-size:16px;border-radius:12px;font-family:'Orbitron',sans-serif;letter-spacing:1px;" onclick="analyzeAudio()">🧠 ANALIZAR SONIDO</button>
+    <div class="result-card" id="audioResult">
+      <div id="audioSeverity"></div><div class="result-title" id="audioTitle"></div><div class="result-desc" id="audioDesc"></div>
+      <div class="divider"></div><div class="sec-label">Posibles causas</div><div id="audioCauses"></div>
+      <div class="divider"></div><div class="sec-label">Recomendación</div><div id="audioRecommend"></div>
+      <div class="result-actions" id="audioActions"></div>
+    </div>
+  </div>
+</div>
 
-        <!-- HOME -->
-        <div id="view-home">
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <button onclick="showView('scanner')" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-chart-line text-cyan-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">DIAGNÓSTICO</div>
-                    <div class="text-[9px] text-gray-400">OBD2 EN VIVO</div>
-                </button>
-                <button onclick="showView('dtc')" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-database text-yellow-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">CÓDIGOS DTC</div>
-                    <div class="text-[9px] text-gray-400">50+ CÓDIGOS</div>
-                </button>
-                <button onclick="showView('wiring')" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-bolt text-orange-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">DIAGRAMAS</div>
-                    <div class="text-[9px] text-gray-400">CABLEADO</div>
-                </button>
-                <button onclick="showView('pinouts')" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-microchip text-green-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">PINOUTS ECU</div>
-                    <div class="text-[9px] text-gray-400">6 SISTEMAS</div>
-                </button>
-                <button onclick="showView('inventory')" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-warehouse text-purple-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">REFACCIONES</div>
-                    <div class="text-[9px] text-gray-400">INVENTARIO</div>
-                </button>
-                <button onclick="loginAdmin()" class="btn-pro p-6 rounded-xl">
-                    <i class="fas fa-user-gear text-red-400 text-4xl mb-3"></i>
-                    <div class="text-xs font-bold text-white">ADMIN</div>
-                    <div class="text-[9px] text-gray-400">GESTIÓN</div>
-                </button>
-            </div>
+<!-- ═══ VISIÓN ═══ -->
+<div class="screen" id="visual">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">INSPECCIÓN VISUAL</div></div>
+  <div class="content">
+    <div class="camera-area">
+      <div class="camera-preview" id="cameraPreview">
+        <video id="cameraFeed" style="width:100%;height:100%;object-fit:cover;display:none;" autoplay playsinline></video>
+        <div class="placeholder" id="cameraPlaceholder"><div class="cam-icon">📷</div><p>Toca para activar cámara</p></div>
+        <div class="camera-overlay"><span>Enfoca el componente</span></div>
+      </div>
+      <div class="camera-controls">
+        <button class="cam-btn" onclick="toggleFlash()">💡</button>
+        <button class="cam-btn capture" onclick="startCamera()" id="camStartBtn">📷</button>
+        <button class="cam-btn" onclick="switchCamera()">🔄</button>
+      </div>
+    </div>
+    <div class="sec-label">¿Qué componente revisas?</div>
+    <div class="chip-group">
+      <span class="chip" onclick="toggleChip(this)">Banda</span><span class="chip" onclick="toggleChip(this)">Manguera</span>
+      <span class="chip" onclick="toggleChip(this)">Correa</span><span class="chip" onclick="toggleChip(this)">Cable</span>
+      <span class="chip" onclick="toggleChip(this)">Filtro</span><span class="chip" onclick="toggleChip(this)">Bujía</span>
+      <span class="chip" onclick="toggleChip(this)">Aceite</span><span class="chip" onclick="toggleChip(this)">Refrigerante</span>
+      <span class="chip" onclick="toggleChip(this)">Frenos</span><span class="chip" onclick="toggleChip(this)">Llanta</span>
+    </div>
+    <button class="action-btn primary" style="width:100%;padding:14px;font-size:16px;border-radius:12px;font-family:'Orbitron',sans-serif;letter-spacing:1px;" onclick="analyzeVisual()">👁️ ANALIZAR IMAGEN</button>
+    <div class="result-card" id="visualResult">
+      <div id="visualSeverity"></div><div class="result-title" id="visualTitle"></div><div class="result-desc" id="visualDesc"></div>
+      <div class="result-actions" id="visualActions"></div>
+    </div>
+  </div>
+</div>
 
-            <div class="glass rounded-xl p-4 border border-cyan-500/30">
-                <div class="flex items-center gap-2 mb-3">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <h3 class="text-cyan-400 font-bold text-sm">SISTEMA ACTIVO</h3>
-                </div>
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">PROPIETARIO:</span>
-                        <span class="text-white font-bold">FERNANDO MILLÁN</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">TELÉFONO:</span>
-                        <span class="text-cyan-400 font-mono">777-683-8196</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">WHATSAPP:</span>
-                        <a href="https://wa.me/527776838196" class="text-green-400 font-bold">CONTACTAR</a>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">VERSIÓN:</span>
-                        <span class="text-cyan-400">v1.0.0 PRO</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- ═══ OBD2 ═══ -->
+<div class="screen" id="diagnostic">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">OBD2 SCANNER</div></div>
+  <div class="content">
+    <div style="text-align:center;padding:20px">
+      <p style="color:var(--gray);font-size:14px;margin-bottom:16px;">Conecta tu ELM327 o V-Link al puerto OBD2</p>
+      <button class="action-btn primary" style="padding:14px 30px;font-size:15px;border-radius:12px;" onclick="connectOBD()">🔌 CONECTAR OBD2</button>
+    </div>
+    <div class="sec-label">Integración con ProPart Diagnostic</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;">Este módulo se enlaza con <strong style="color:var(--amber)">ProPart Diagnostic Profesional v8.1</strong> para lectura completa de DTCs, datos en vivo, diagramas de cableado y diagnóstico predictivo por VIN.</p>
+      <button class="action-btn" style="width:100%;margin-top:10px;" onclick="alert('Abre ProPart Diagnostic Profesional')">Abrir ProPart Diagnostic →</button>
+    </div>
+  </div>
+</div>
 
-        <!-- SCANNER -->
-        <div id="view-scanner" class="hidden">
-            <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
-                <button class="tab-btn active" onclick="switchTab('live')">EN VIVO</button>
-                <button class="tab-btn" onclick="switchTab('injectors')">INYECTORES</button>
-                <button class="tab-btn" onclick="switchTab('coils')">BOBINAS</button>
-                <button class="tab-btn" onclick="switchTab('diesel')">DIESEL</button>
-            </div>
+<!-- ═══ TALLERES ═══ -->
+<div class="screen" id="workshops">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">TALLERES CERCANOS</div></div>
+  <div class="content">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(16,185,129,0.03));"></div>
+      <div style="text-align:center;position:relative;"><div style="font-size:40px;">🗺️</div><p style="font-size:12px;color:var(--gray);margin-top:6px;">Obteniendo ubicación GPS...</p></div>
+    </div>
+    <div class="sec-label">Talleres disponibles</div>
+    <div class="workshop-card"><div class="ws-dist"><div class="km">1.2</div><div class="unit">KM</div></div><div class="ws-info"><h4>Taller Mecánico Juárez</h4><p>Servicio general — Abierto hasta 19:00</p></div><div class="ws-rating">⭐ 4.5</div></div>
+    <div class="workshop-card"><div class="ws-dist"><div class="km">2.8</div><div class="unit">KM</div></div><div class="ws-info"><h4>AutoElectric Morelos</h4><p>Eléctrico automotriz — Abierto hasta 18:00</p></div><div class="ws-rating">⭐ 4.2</div></div>
+    <div class="workshop-card"><div class="ws-dist"><div class="km">4.1</div><div class="unit">KM</div></div><div class="ws-info"><h4>Servicio Rápido Don Chema</h4><p>Mecánica general, frenos, suspensión — 24hrs</p></div><div class="ws-rating">⭐ 4.7</div></div>
+    <div class="workshop-card" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.03);"><div class="ws-dist"><div class="km">0.5</div><div class="unit">KM</div></div><div class="ws-info"><h4 style="color:var(--amber);">🏪 Refaccionaria Millán</h4><p>Partes eléctricas — Tu tienda de confianza</p></div><div class="ws-rating">⭐ 5.0</div></div>
+  </div>
+</div>
 
-            <div class="glass rounded-xl p-4 mb-4 border border-cyan-500/30">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-white font-bold text-xs flex items-center gap-2">
-                        <i class="fas fa-wifi text-cyan-400"></i> INTERFAZ ELM327
-                    </h3>
-                    <span id="conn-status" class="text-[9px] px-3 py-1 rounded-full bg-red-900 text-red-200 font-bold">DESCONECTADO</span>
-                </div>
-                <button onclick="toggleBluetooth()" id="btn-connect" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 py-3 rounded-lg font-bold text-xs glow">
-                    <i class="fab fa-bluetooth mr-2"></i>CONECTAR BLUETOOTH ELM327
-                </button>
-                <div class="mt-3 bg-blue-900/20 border border-blue-500/30 rounded p-3 text-xs text-blue-300">
-                    <div class="font-bold mb-2">📱 INSTRUCCIONES RÁPIDAS:</div>
-                    <div class="space-y-1 text-[10px]">
-                        <div>1️⃣ Conectar ELM327 al OBD2 del vehículo</div>
-                        <div>2️⃣ Encender ignición (motor ON o OFF)</div>
-                        <div>3️⃣ LED del ELM327 parpadeando</div>
-                        <div>4️⃣ Click "CONECTAR BLUETOOTH"</div>
-                        <div>5️⃣ Seleccionar tu ELM327</div>
-                    </div>
-                </div>
-            </div>
+<!-- ═══ REFACCIONES ═══ -->
+<div class="screen" id="shop">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">REFACCIONES</div></div>
+  <div class="content">
+    <div class="form-group"><input class="form-input" placeholder="🔍 Buscar refacción..." id="searchParts"></div>
+    <div class="contact-card" style="margin-bottom:16px;"><div style="font-size:24px;margin-bottom:6px;">🏪</div><div class="contact-name">Refaccionaria de Partes Eléctricas Millán</div><div class="contact-role" style="margin-top:4px;">Alpuyeca, Xochitepec, Morelos</div></div>
+    <div class="sec-label">Sugerencias para tu vehículo</div>
+    <div class="part-card"><div class="part-info"><h4>Sensor MAF — VW Golf A4</h4><p>Bosch 0280218002 — Compatible ME7.5.10</p><button class="part-btn">📞 Consultar</button></div><div class="part-price">$850</div></div>
+    <div class="part-card"><div class="part-info"><h4>Sensor CKP — Nissan Versa</h4><p>23731-JA00B — Original</p><button class="part-btn">📞 Consultar</button></div><div class="part-price">$620</div></div>
+    <div class="part-card"><div class="part-info"><h4>Bobina de Encendido — VW</h4><p>Beru 0040100065 — 4 pines</p><button class="part-btn">📞 Consultar</button></div><div class="part-price">$480</div></div>
+    <div class="part-card"><div class="part-info"><h4>Banda de Distribución — Kit</h4><p>Continental CT1028K2 — Con tensor</p><button class="part-btn">📞 Consultar</button></div><div class="part-price">$1,200</div></div>
+  </div>
+</div>
 
-            <div id="tab-live">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-tachometer-alt"></i> RPM
-                        </div>
-                        <div id="val-rpm" class="data-display text-cyan-400 orbitron">0</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-temperature-high"></i> TEMP ECT
-                        </div>
-                        <div id="val-temp" class="data-display text-orange-400 orbitron">0°C</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-wind"></i> MAF
-                        </div>
-                        <div id="val-maf" class="data-display text-green-400 orbitron">0.0</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-gauge"></i> MAP
-                        </div>
-                        <div id="val-map" class="data-display text-yellow-400 orbitron">0</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-sliders"></i> TPS %
-                        </div>
-                        <div id="val-tps" class="data-display text-purple-400 orbitron">0</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-battery-three-quarters"></i> VOLTAJE
-                        </div>
-                        <div id="val-volt" class="data-display text-blue-400 orbitron">0.0V</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-thermometer-half"></i> IAT
-                        </div>
-                        <div id="val-iat" class="data-display text-amber-400 orbitron">0°C</div>
-                    </div>
-                    <div class="card-sensor p-3 rounded-xl">
-                        <div class="text-[9px] text-gray-400 mb-1 font-bold flex items-center gap-1">
-                            <i class="fas fa-smog"></i> O2
-                        </div>
-                        <div id="val-o2" class="data-display text-lime-400 orbitron">0.00V</div>
-                    </div>
-                </div>
-            </div>
+<!-- ═══ TÉCNICO ═══ -->
+<div class="screen" id="mechanic">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title">CONTACTAR TÉCNICO</div></div>
+  <div class="content">
+    <div class="contact-card">
+      <div class="contact-avatar">👨‍🔧</div>
+      <div class="contact-name">Fernando Millán Melchor</div>
+      <div class="contact-role">TÉCNICO ESPECIALISTA</div>
+      <p style="font-size:13px;color:var(--gray);margin-top:8px;line-height:1.5;">Mecánico profesional especializado en sistemas eléctricos. Diagnóstico remoto y asistencia en carretera.</p>
+      <div class="contact-actions">
+        <button class="contact-btn call">📞 Llamar</button>
+        <button class="contact-btn msg">💬 WhatsApp</button>
+      </div>
+    </div>
+    <div class="sec-label">Servicios disponibles</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="info-row"><span class="label">Diagnóstico remoto</span><span class="value" style="color:var(--green);">Disponible</span></div>
+      <div class="info-row"><span class="label">Asistencia en carretera</span><span class="value" style="color:var(--green);">Disponible</span></div>
+      <div class="info-row"><span class="label">Reparación in situ</span><span class="value" style="color:var(--green);">Disponible</span></div>
+      <div class="info-row"><span class="label">Horario</span><span class="value">Lun-Sáb 8:00 - 19:00</span></div>
+      <div class="info-row"><span class="label">Cobertura</span><span class="value">Morelos y alrededores</span></div>
+    </div>
+  </div>
+</div>
 
-            <div id="tab-injectors" class="hidden">
-                <div class="glass rounded-xl p-4 border border-cyan-500/30">
-                    <h3 class="text-cyan-400 font-bold mb-4 flex items-center gap-2">
-                        <i class="fas fa-tint"></i> MONITOR INYECTORES (Ancho de Pulso)
-                    </h3>
-                    <div class="space-y-3">
-                        <div id="inj-1">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-300 font-bold">INYECTOR 1</span>
-                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
-                            </div>
-                            <div class="w-full bg-gray-800 rounded-full h-3">
-                                <div class="injector-bar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div id="inj-2">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-300 font-bold">INYECTOR 2</span>
-                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
-                            </div>
-                            <div class="w-full bg-gray-800 rounded-full h-3">
-                                <div class="injector-bar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div id="inj-3">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-300 font-bold">INYECTOR 3</span>
-                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
-                            </div>
-                            <div class="w-full bg-gray-800 rounded-full h-3">
-                                <div class="injector-bar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div id="inj-4">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-300 font-bold">INYECTOR 4</span>
-                                <span class="text-green-400 font-mono font-bold">0.00 ms</span>
-                            </div>
-                            <div class="w-full bg-gray-800 rounded-full h-3">
-                                <div class="injector-bar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 bg-blue-900/20 border border-blue-500/30 rounded p-3 text-xs text-blue-300">
-                        <strong>💡 REFERENCIA:</strong> Normal en ralentí: 2-4ms | Aceleración: 4-8ms
-                    </div>
-                </div>
-            </div>
+<!-- ═══ SOS PRE-LAUNCH ═══ -->
+<div class="screen" id="sos">
+  <div class="screen-header"><button class="back-btn" onclick="goScreen('home')">←</button><div class="screen-title" style="color:var(--red);">EMERGENCIA SOS</div></div>
+  <div class="sos-pre">
+    <p style="font-size:14px;color:var(--gray);margin-bottom:10px;">Presiona el botón para enviar una alerta de emergencia con tu ubicación GPS</p>
+    <button class="sos-big-btn" onclick="launchSOS()"><span class="sos-icon">🆘</span>SOS</button>
+    <div class="sos-info">
+      <h4>SISTEMA DE CONFIRMACIÓN GARANTIZADA</h4>
+      <p>
+        ✅ <strong style="color:var(--green)">Folio de emergencia</strong> — Recibes un número de seguimiento al instante.<br><br>
+        ✅ <strong style="color:var(--green)">Señal visual en pantalla</strong> — Tu teléfono cambia de color según el estado: rojo = enviando, ámbar = recibido, verde = grúa confirmada.<br><br>
+        ✅ <strong style="color:var(--green)">Vibración de confirmación</strong> — Sientes 3 vibraciones cuando la grúa acepta tu alerta.<br><br>
+        ✅ <strong style="color:var(--green)">Sonido de alerta</strong> — Escuchas un tono cuando la grúa te confirma.<br><br>
+        ✅ <strong style="color:var(--green)">Callback directo</strong> — La grúa te regresa la llamada. Ves la notificación en pantalla completa.<br><br>
+        ✅ <strong style="color:var(--green)">Modo baliza</strong> — Activa el flash de tu pantalla para que te encuentren en la oscuridad.<br><br>
+        ✅ <strong style="color:var(--green)">Señal keepalive</strong> — Un indicador en vivo confirma que tu alerta sigue activa cada 5 segundos.
+      </p>
+    </div>
+    <div class="sos-info" style="margin-top:10px;border-color:rgba(239,68,68,0.2);">
+      <h4 style="color:var(--red);">FUNCIONA SIN SEÑAL COMPLETA</h4>
+      <p>Aunque no tengas datos, la alerta se envía por SMS de emergencia con coordenadas GPS.</p>
+    </div>
+  </div>
+</div>
 
-            <div id="tab-coils" class="hidden">
-                <div class="glass rounded-xl p-4 border border-cyan-500/30">
-                    <h3 class="text-cyan-400 font-bold mb-4 flex items-center gap-2">
-                        <i class="fas fa-bolt"></i> ESTADO BOBINAS
-                    </h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div id="coil-1" class="p-4 rounded-xl text-center bg-gray-800/50 border border-gray-700">
-                            <div class="font-bold text-sm mb-2">BOBINA 1</div>
-                            <div class="text-4xl mb-1 text-gray-600">●</div>
-                            <div class="text-xs text-gray-500">INACTIVA</div>
-                        </div>
-                        <div id="coil-2" class="p-4 rounded-xl text-center bg-gray-800/50 border border-gray-700">
-                            <div class="font-bold text-sm mb-2">BOBINA 2</div>
-                            <div class="text-4xl mb-1 text-gray-600">●</div>
-                            <div class="text-xs text-gray-500">INACTIVA</div>
-                        </div>
-                        <div id="coil-3" class="p-4 rounded-xl text-center bg-gray-800/50 border border-gray-700">
-                            <div class="font-bold text-sm mb-2">BOBINA 3</div>
-                            <div class="text-4xl mb-1 text-gray-600">●</div>
-                            <div class="text-xs text-gray-500">INACTIVA</div>
-                        </div>
-                        <div id="coil-4" class="p-4 rounded-xl text-center bg-gray-800/50 border border-gray-700">
-                            <div class="font-bold text-sm mb-2">BOBINA 4</div>
-                            <div class="text-4xl mb-1 text-gray-600">●</div>
-                            <div class="text-xs text-gray-500">INACTIVA</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SOS FULLSCREEN EXPERIENCE                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sos-fullscreen" id="sosFullscreen">
+  <!-- Top bar -->
+  <div class="sos-top-bar">
+    <div class="sos-badge">
+      <div class="sos-live-dot" id="sosLiveDot"></div>
+      <span id="sosTopLabel">SOS ACTIVO</span>
+    </div>
+    <div class="sos-signal-bars" id="sosSignal">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+  </div>
 
-            <div id="tab-diesel" class="hidden">
-                <div class="glass rounded-xl p-4 border border-cyan-500/30 mb-3">
-                    <h3 class="text-cyan-400 font-bold mb-3">COMMON RAIL</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-3 bg-slate-800 rounded">
-                            <div class="text-[9px] text-gray-400 mb-1">PRESIÓN RIEL</div>
-                            <div id="val-rail" class="text-2xl font-black text-green-400 orbitron">0 bar</div>
-                        </div>
-                        <div class="p-3 bg-slate-800 rounded">
-                            <div class="text-[9px] text-gray-400 mb-1">EGR %</div>
-                            <div id="val-egr" class="text-2xl font-black text-yellow-400 orbitron">0%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Folio -->
+  <div class="sos-folio">
+    <div class="sos-folio-label">Folio de emergencia</div>
+    <div class="sos-folio-number" id="sosFolio">—</div>
+  </div>
 
-        <!-- OTRAS VISTAS -->
-        <div id="view-dtc" class="hidden">
-            <div class="glass rounded-xl p-4 border border-cyan-500/30 mb-4">
-                <h2 class="text-cyan-400 font-bold text-lg mb-4">ESCANEAR CÓDIGOS DTC</h2>
-                <button onclick="alert('Función de escaneo DTC\nConectado a ELM327 en tiempo real')" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-4 rounded-xl font-bold">
-                    <i class="fas fa-search mr-2"></i>BUSCAR CÓDIGOS
-                </button>
-            </div>
-            <div class="bg-blue-900/20 border border-blue-500/30 rounded p-4 text-xs text-blue-300">
-                <strong>ℹ️ BASE DE DATOS:</strong> 50+ códigos DTC con diagnóstico completo, causas probables, reparación paso a paso y costos estimados.
-            </div>
-        </div>
+  <!-- Main status circle -->
+  <div class="sos-main-status">
+    <div class="sos-ring" id="sosRing">
+      <div class="sos-ring-outer" id="sosRingOuter"></div>
+      <span class="status-icon" id="sosStatusIcon">📡</span>
+      <span class="status-text" id="sosStatusText" style="color:var(--red)">ENVIANDO</span>
+    </div>
+    <div class="sos-main-label" id="sosMainLabel">Enviando alerta de emergencia...</div>
+    <div class="sos-main-sublabel" id="sosMainSub">Obteniendo ubicación GPS</div>
+  </div>
 
-        <div id="view-wiring" class="hidden">
-            <h2 class="text-cyan-400 font-bold text-lg mb-4">DIAGRAMAS DE CABLEADO</h2>
-            <div class="space-y-3">
-                <div class="glass p-4 rounded-xl border border-orange-500/30">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-bolt text-orange-400 text-2xl"></i>
-                        <div>
-                            <div class="text-white font-bold text-sm">VW JETTA A4 2.0L</div>
-                            <div class="text-xs text-gray-400">Sistema completo de encendido e inyección</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass p-4 rounded-xl border border-orange-500/30">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-bolt text-orange-400 text-2xl"></i>
-                        <div>
-                            <div class="text-white font-bold text-sm">NISSAN TSURU III 1.6L</div>
-                            <div class="text-xs text-gray-400">Diagrama eléctrico GA16DE</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass p-4 rounded-xl border border-orange-500/30">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-bolt text-orange-400 text-2xl"></i>
-                        <div>
-                            <div class="text-white font-bold text-sm">DIESEL COMMON RAIL</div>
-                            <div class="text-xs text-gray-400">Sistema completo riel común</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Timeline -->
+  <div class="sos-timeline" id="sosTimeline">
+    <div class="timeline-step active" id="step1">
+      <div class="timeline-dot">📡</div>
+      <div class="timeline-content">
+        <div class="timeline-title">Enviando alerta SOS</div>
+        <div class="timeline-time" id="step1Time">—</div>
+        <div class="timeline-detail">Transmitiendo ubicación GPS y datos del vehículo</div>
+      </div>
+    </div>
+    <div class="timeline-step waiting" id="step2">
+      <div class="timeline-dot">📍</div>
+      <div class="timeline-content">
+        <div class="timeline-title">Alerta recibida por la red</div>
+        <div class="timeline-time" id="step2Time">—</div>
+        <div class="timeline-detail">Buscando grúas disponibles en tu zona</div>
+      </div>
+    </div>
+    <div class="timeline-step waiting" id="step3">
+      <div class="timeline-dot">🚛</div>
+      <div class="timeline-content">
+        <div class="timeline-title">Grúa confirmada</div>
+        <div class="timeline-time" id="step3Time">—</div>
+        <div class="timeline-detail">Una grúa aceptó tu solicitud y va en camino</div>
+      </div>
+    </div>
+    <div class="timeline-step waiting" id="step4">
+      <div class="timeline-dot">📞</div>
+      <div class="timeline-content">
+        <div class="timeline-title">Callback — Te regresan la llamada</div>
+        <div class="timeline-time" id="step4Time">—</div>
+        <div class="timeline-detail">La grúa te contacta para confirmar detalles</div>
+      </div>
+    </div>
+    <div class="timeline-step waiting" id="step5">
+      <div class="timeline-dot">✅</div>
+      <div class="timeline-content">
+        <div class="timeline-title">Auxilio en camino</div>
+        <div class="timeline-time" id="step5Time">—</div>
+        <div class="timeline-detail">La grúa viene hacia ti — tiempo estimado confirmado</div>
+      </div>
+    </div>
+  </div>
 
-        <div id="view-pinouts" class="hidden">
-            <h2 class="text-cyan-400 font-bold text-lg mb-4">PINOUTS ECU/PCM/ECM</h2>
-            <div class="space-y-3">
-                <div class="glass p-4 rounded-xl border border-green-500/30">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-microchip text-green-400 text-2xl"></i>
-                            <div>
-                                <div class="text-white font-bold text-sm">VW BOSCH ME7.5</div>
-                                <div class="text-xs text-gray-400">121 PINES</div>
-                            </div>
-                        </div>
-                        <div class="text-cyan-400 text-xs">VER →</div>
-                    </div>
-                </div>
-                <div class="glass p-4 rounded-xl border border-green-500/30">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-microchip text-green-400 text-2xl"></i>
-                            <div>
-                                <div class="text-white font-bold text-sm">NISSAN ECCS</div>
-                                <div class="text-xs text-gray-400">76 PINES</div>
-                            </div>
-                        </div>
-                        <div class="text-cyan-400 text-xs">VER →</div>
-                    </div>
-                </div>
-                <div class="glass p-4 rounded-xl border border-green-500/30">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-microchip text-green-400 text-2xl"></i>
-                            <div>
-                                <div class="text-white font-bold text-sm">FORD EEC-V</div>
-                                <div class="text-xs text-gray-400">104 PINES</div>
-                            </div>
-                        </div>
-                        <div class="text-cyan-400 text-xs">VER →</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Keepalive -->
+  <div class="sos-keepalive" id="sosKeepalive" style="display:none;">
+    <div class="keepalive-ping"></div>
+    <span class="keepalive-text" id="keepaliveText">Conexión activa — último ping hace 0s</span>
+  </div>
 
-        <div id="view-inventory" class="hidden">
-            <input type="text" id="search-inv" placeholder="🔍 Buscar refacciones..." class="mb-4">
-            <div id="inventory-list" class="space-y-2">
-                <div class="glass rounded-xl p-4 border border-cyan-500/20">
-                    <div class="flex justify-between">
-                        <div class="flex-1">
-                            <div class="text-[9px] text-cyan-400 font-bold">BOBINAS</div>
-                            <div class="font-bold text-sm text-white">BOBINA JETTA A4 2.0L</div>
-                            <div class="text-[10px] text-gray</div>
+  <!-- ETA box -->
+  <div class="sos-eta-box" id="sosEtaBox">
+    <div class="eta-label">Tiempo estimado de llegada</div>
+    <div class="eta-time" id="etaCountdown">--:--</div>
+    <div class="eta-unit">MINUTOS</div>
+    <div class="eta-grua-info">
+      <div class="g-row"><span class="g-label">Grúa</span><span class="g-value" id="etaGruaName">—</span></div>
+      <div class="g-row"><span class="g-label">Operador</span><span class="g-value" id="etaOperator">—</span></div>
+      <div class="g-row"><span class="g-label">Unidad</span><span class="g-value" id="etaUnit">—</span></div>
+      <div class="g-row"><span class="g-label">Distancia</span><span class="g-value" id="etaDist">—</span></div>
+      <div class="g-row"><span class="g-label">Teléfono</span><span class="g-value" id="etaPhone">—</span></div>
+    </div>
+  </div>
+
+  <!-- Beacon button -->
+  <div class="sos-beacon-btn" id="beaconBtn" onclick="toggleBeacon()">
+    💡 ACTIVAR MODO BALIZA — Para que te encuentren de noche
+  </div>
+
+  <!-- Bottom -->
+  <div class="sos-bottom">
+    <button class="sos-cancel-btn" onclick="cancelFullSOS()">✕ CANCELAR ALERTA DE EMERGENCIA</button>
+  </div>
+</div>
+
+<!-- ═══ CALLBACK NOTIFICATION ═══ -->
+<div class="sos-callback-notif" id="callbackNotif">
+  <div class="callback-card">
+    <div class="callback-header">
+      <div class="callback-avatar">🚛</div>
+      <div>
+        <div class="callback-from" id="callbackFrom">Grúas Hernández</div>
+        <div class="callback-label">TE ESTÁ LLAMANDO</div>
+      </div>
+    </div>
+    <div class="callback-msg" id="callbackMsg">
+      "Buenas tardes, soy Juan de Grúas Hernández. Recibí tu alerta SOS. Voy en camino a tu ubicación. Llego en aproximadamente 12 minutos."
+    </div>
+    <div class="callback-actions">
+      <button class="accept" onclick="acceptCallback()">📞 Contestar</button>
+      <button class="decline" onclick="dismissCallback()">Después</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAVBAR ═══ -->
+<div class="navbar" id="navbar" style="display:none;">
+  <button class="nav-item active" onclick="goScreen('home')"><span class="nav-icon">🏠</span>Inicio</button>
+  <button class="nav-item" onclick="goScreen('audio')"><span class="nav-icon">👂</span>Oído</button>
+  <button class="nav-item" onclick="goScreen('visual')"><span class="nav-icon">📷</span>Visión</button>
+  <button class="nav-item" onclick="goScreen('sos')"><span class="nav-icon">🆘</span>SOS</button>
+  <button class="nav-item" onclick="goScreen('mechanic')"><span class="nav-icon">👨‍🔧</span>Técnico</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  const nav = document.getElementById('navbar');
+  nav.style.display = (id === 'splash') ? 'none' : 'flex';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const labels = {home:0, audio:1, visual:2, sos:3, mechanic:4};
+  if (labels[id] !== undefined) document.querySelectorAll('.nav-item')[labels[id]].classList.add('active');
+}
+
+function toggleChip(el) { el.classList.toggle('selected'); }
+
+// ═══════════════════════════════════════
+// AUDIO SYSTEM
+// ═══════════════════════════════════════
+let recording = false, recInterval = null, recSeconds = 0;
+
+function toggleRecord() {
+  const btn = document.getElementById('recBtn'), label = document.getElementById('recLabel'), timer = document.getElementById('recTimer');
+  if (!recording) {
+    recording = true; btn.classList.add('recording'); document.getElementById('recIcon').textContent = '⏹';
+    label.textContent = 'GRABANDO...'; recSeconds = 0; createWaveform();
+    recInterval = setInterval(() => { recSeconds++; timer.textContent = String(Math.floor(recSeconds/60)).padStart(2,'0')+':'+String(recSeconds%60).padStart(2,'0'); animateWaveform(); }, 1000);
+    if (navigator.mediaDevices) navigator.mediaDevices.getUserMedia({audio:true}).catch(()=>{});
+  } else {
+    recording = false; btn.classList.remove('recording'); document.getElementById('recIcon').textContent = '🎤';
+    label.textContent = 'GRABACIÓN COMPLETADA ✓'; clearInterval(recInterval);
+  }
+}
+
+function createWaveform() { const wf = document.getElementById('waveform'); wf.innerHTML = ''; for(let i=0;i<40;i++){const b=document.createElement('div');b.className='bar';b.style.height='4px';wf.appendChild(b);} }
+function animateWaveform() { document.querySelectorAll('#waveform .bar').forEach(b => { b.style.height = (Math.random()*40+5)+'px'; b.style.opacity = 0.4+Math.random()*0.6; }); }
+
+const DIAGNOSES = [
+  { severity:'yellow', severityText:'⚠️ PRECAUCIÓN', title:'Posible desgaste de balatas', desc:'Patrón consistente con balatas desgastadas. Chirrido metálico indica material de fricción al límite.', causes:['Balatas al mínimo','Disco rayado o deformado','Falta lubricante en caliper pins'], recommend:'Circula con precaución, máx 60 km/h hasta el taller. Evita frenados bruscos.', canDrive:true, maxSpeed:'60 km/h' },
+  { severity:'red', severityText:'🔴 NO CIRCULAR', title:'Posible falla en biela o cojinetes', desc:'Golpeteo rítmico en parte inferior sugiere desgaste severo en cojinetes de biela.', causes:['Cojinetes desgastados','Falta presión de aceite','Nivel bajo o contaminado','Biela dañada'], recommend:'NO mueva el vehículo. Motor en riesgo de daño catastrófico. Solicite grúa.', canDrive:false },
+  { severity:'green', severityText:'✅ PUEDE CIRCULAR', title:'Banda de accesorios con desgaste leve', desc:'Silbido intermitente al encender indica banda serpentina perdiendo tensión.', causes:['Banda reseca o cuarteada','Tensor flojo','Polea desalineada'], recommend:'Circule normalmente. Programe cambio de banda en los próximos 15 días.', canDrive:true, maxSpeed:'Normal' }
+];
+
+function analyzeAudio() {
+  const result = document.getElementById('audioResult'), diag = DIAGNOSES[Math.floor(Math.random()*DIAGNOSES.length)];
+  document.getElementById('audioSeverity').innerHTML = `<span class="severity-badge severity-${diag.severity}">${diag.severityText}</span>`;
+  document.getElementById('audioTitle').textContent = diag.title;
+  document.getElementById('audioDesc').textContent = diag.desc;
+  document.getElementById('audioCauses').innerHTML = diag.causes.map(c => `<p style="font-size:13px;color:var(--gray);padding:4px 0 4px 16px;position:relative;"><span style="position:absolute;left:0;color:var(--amber);">▸</span>${c}</p>`).join('');
+  let rec = `<p style="font-size:14px;color:var(--gray);line-height:1.6;">${diag.recommend}</p>`;
+  if (diag.canDrive && diag.maxSpeed) rec += `<div style="margin-top:8px;padding:8px 12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;"><span style="color:var(--green);font-weight:600;font-size:13px;">🚗 Velocidad máxima: ${diag.maxSpeed}</span></div>`;
+  document.getElementById('audioRecommend').innerHTML = rec;
+  document.getElementById('audioActions').innerHTML = !diag.canDrive
+    ? `<button class="action-btn danger" onclick="goScreen('sos')" style="flex:1;">🆘 Pedir Grúa</button><button class="action-btn" onclick="goScreen('mechanic')" style="flex:1;">👨‍🔧 Técnico</button>`
+    : `<button class="action-btn primary" onclick="goScreen('workshops')" style="flex:1;">🔧 Talleres</button><button class="action-btn" onclick="goScreen('shop')" style="flex:1;">🏪 Refacciones</button>`;
+  result.classList.add('visible'); result.scrollIntoView({behavior:'smooth'});
+}
+
+function analyzeVisual() {
+  const r = document.getElementById('visualResult');
+  document.getElementById('visualSeverity').innerHTML = '<span class="severity-badge severity-yellow">⚠️ ATENCIÓN PRONTO</span>';
+  document.getElementById('visualTitle').textContent = 'Desgaste visible en componente';
+  document.getElementById('visualDesc').textContent = 'Se detecta desgaste. Reemplazo preventivo recomendado en los próximos 30 días.';
+  document.getElementById('visualActions').innerHTML = `<button class="action-btn primary" onclick="goScreen('shop')" style="flex:1;">🏪 Comprar</button><button class="action-btn" onclick="goScreen('workshops')" style="flex:1;">🔧 Taller</button>`;
+  r.classList.add('visible'); r.scrollIntoView({behavior:'smooth'});
+}
+
+// CAMERA
+let cameraStream = null;
+async function startCamera() {
+  try { const feed=document.getElementById('cameraFeed'),ph=document.getElementById('cameraPlaceholder'); if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;feed.style.display='none';ph.style.display='';return;} const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); cameraStream=s;feed.srcObject=s;feed.style.display='block';ph.style.display='none';} catch(e){alert('No se pudo acceder a la cámara.');}
+}
+function toggleFlash() { alert('Flash: depende del hardware.'); }
+function switchCamera() { alert('Cambiar cámara.'); }
+
+// OBD2
+function connectOBD() { const s=document.getElementById('connStatus'); s.textContent='BUSCANDO...'; s.style.borderColor='var(--amber)'; s.style.color='var(--amber)'; setTimeout(()=>{s.textContent='CONECTADO';s.classList.add('connected');document.getElementById('currentVin').textContent='3VW2K7AJ5MM...';document.getElementById('lastDiag').textContent='Hoy';},2000); }
+
+// ═══════════════════════════════════════════
+// SOS ENHANCED TRUST SYSTEM
+// ═══════════════════════════════════════════
+let sosActive = false;
+let beaconActive = false;
+let beaconInterval = null;
+let keepaliveInterval = null;
+let keepaliveSec = 0;
+let etaMinutes = 0;
+let etaInterval = null;
+let audioCtx = null;
+
+function getTime() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0') + ':' + d.getSeconds().toString().padStart(2,'0');
+}
+
+function generateFolio() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let f = 'SOS-';
+  for (let i = 0; i < 8; i++) f += chars[Math.floor(Math.random()*chars.length)];
+  return f;
+}
+
+function vibrate(pattern) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
+}
+
+function playTone(freq, duration, type='sine') {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = 0.3;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration/1000);
+    osc.stop(audioCtx.currentTime + duration/1000);
+  } catch(e) {}
+}
+
+function playAlertSound() {
+  playTone(880, 200);
+  setTimeout(() => playTone(1100, 200), 250);
+  setTimeout(() => playTone(1320, 300), 500);
+}
+
+function playConfirmSound() {
+  playTone(523, 150);
+  setTimeout(() => playTone(659, 150), 180);
+  setTimeout(() => playTone(784, 150), 360);
+  setTimeout(() => playTone(1047, 300), 540);
+}
+
+function playCallbackSound() {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => playTone(800, 400, 'sine'), i * 600);
+    setTimeout(() => playTone(600, 400, 'sine'), i * 600 + 300);
+  }
+}
+
+function setSignalBars(count) {
+  document.querySelectorAll('#sosSignal .bar').forEach((b, i) => {
+    b.classList.toggle('active', i < count);
+  });
+}
+
+function launchSOS() {
+  if (!confirm('¿Confirmas enviar alerta SOS de emergencia?\n\nSe enviará tu ubicación GPS a las grúas más cercanas.\n\nRecibirás confirmación visual, sonora y por vibración.')) return;
+
+  sosActive = true;
+  const fs = document.getElementById('sosFullscreen');
+  fs.classList.add('active');
+  fs.className = 'sos-fullscreen active sos-phase-sending';
+
+  // Hide navbar
+  document.getElementById('navbar').style.display = 'none';
+
+  // Generate folio
+  document.getElementById('sosFolio').textContent = generateFolio();
+
+  // Initial vibration - ALERT pattern
+  vibrate([200, 100, 200, 100, 400]);
+
+  // Play alert sound
+  setTimeout(() => playAlertSound(), 300);
+
+  // Step 1: Sending
+  const s1 = document.getElementById('step1');
+  s1.className = 'timeline-step active';
+  document.getElementById('step1Time').textContent = getTime();
+  setSignalBars(1);
+
+  // Get GPS
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      document.getElementById('sosMainSub').textContent =
+        `GPS: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+    }, () => {
+      document.getElementById('sosMainSub').textContent = 'GPS por triangulación celular';
+    });
+  }
+
+  // Start keepalive
+  keepaliveSec = 0;
+  document.getElementById('sosKeepalive').style.display = 'flex';
+  keepaliveInterval = setInterval(() => {
+    keepaliveSec++;
+    const ago = keepaliveSec % 5;
+    document.getElementById('keepaliveText').textContent = `Conexión activa — último ping hace ${ago}s`;
+    if (ago === 0) vibrate(50); // tiny pulse every 5s
+  }, 1000);
+
+  // === PHASE 2: Received (after 3s) ===
+  setTimeout(() => {
+    if (!sosActive) return;
+    fs.className = 'sos-fullscreen active sos-phase-received';
+
+    s1.className = 'timeline-step done';
+    const s2 = document.getElementById('step2');
+    s2.className = 'timeline-step active';
+    document.getElementById('step2Time').textContent = getTime();
+
+    document.getElementById('sosStatusIcon').textContent = '📍';
+    document.getElementById('sosStatusText').textContent = 'RECIBIDO';
+    document.getElementById('sosStatusText').style.color = 'var(--amber)';
+    document.getElementById('sosRingOuter').className = 'sos-ring-outer amber';
+    document.getElementById('sosMainLabel').textContent = 'Alerta recibida por la red';
+    document.getElementById('sosMainSub').textContent = 'Buscando grúas disponibles cerca de ti...';
+    document.getElementById('sosLiveDot').className = 'sos-live-dot amber';
+    document.getElementById('sosTopLabel').textContent = 'ALERTA RECIBIDA';
+
+    setSignalBars(2);
+
+    // Vibration: 2 short = received
+    vibrate([150, 80, 150]);
+    playTone(660, 200);
+    setTimeout(() => playTone(880, 250), 250);
+
+  }, 3000);
+
+  // === PHASE 3: Grúa confirmed (after 7s) ===
+  setTimeout(() => {
+    if (!sosActive) return;
+    fs.className = 'sos-fullscreen active sos-phase-confirmed';
+
+    document.getElementById('step2').className = 'timeline-step done';
+    const s3 = document.getElementById('step3');
+    s3.className = 'timeline-step active';
+    document.getElementById('step3Time').textContent = getTime();
+
+    document.getElementById('sosStatusIcon').textContent = '🚛';
+    document.getElementById('sosStatusText').textContent = 'CONFIRMADO';
+    document.getElementById('sosStatusText').style.color = 'var(--green)';
+    document.getElementById('sosRingOuter').className = 'sos-ring-outer green';
+    document.getElementById('sosMainLabel').textContent = '¡Grúa confirmada!';
+    document.getElementById('sosMainSub').textContent = 'Grúas Hernández aceptó tu solicitud';
+    document.getElementById('sosLiveDot').className = 'sos-live-dot green';
+    document.getElementById('sosTopLabel').textContent = 'GRÚA CONFIRMADA';
+
+    setSignalBars(3);
+
+    // STRONG confirmation - 3 vibrations
+    vibrate([300, 150, 300, 150, 300]);
+    playConfirmSound();
+
+    // Show ETA
+    const etaBox = document.getElementById('sosEtaBox');
+    etaBox.classList.add('visible');
+    etaMinutes = 12;
+    document.getElementById('etaCountdown').textContent = etaMinutes + ':00';
+    document.getElementById('etaGruaName').textContent = 'Grúas Hernández';
+    document.getElementById('etaOperator').textContent = 'Juan Hernández M.';
+    document.getElementById('etaUnit').textContent = 'Grúa #14 — Plataforma';
+    document.getElementById('etaDist').textContent = '3.2 km';
+    document.getElementById('etaPhone').textContent = '777-555-1234';
+
+    // Start countdown
+    let etaSec = etaMinutes * 60;
+    etaInterval = setInterval(() => {
+      if (!sosActive) { clearInterval(etaInterval); return; }
+      etaSec--;
+      if (etaSec <= 0) { clearInterval(etaInterval); document.getElementById('etaCountdown').textContent = '¡LLEGÓ!'; return; }
+      const m = Math.floor(etaSec/60);
+      const s = etaSec % 60;
+      document.getElementById('etaCountdown').textContent = m + ':' + String(s).padStart(2,'0');
+    }, 1000);
+
+  }, 7000);
+
+  // === PHASE 4: Callback (after 12s) ===
+  setTimeout(() => {
+    if (!sosActive) return;
+
+    document.getElementById('step3').className = 'timeline-step done';
+    const s4 = document.getElementById('step4');
+    s4.className = 'timeline-step active';
+    document.getElementById('step4Time').textContent = getTime();
+
+    setSignalBars(4);
+
+    // CALLBACK NOTIFICATION - full screen
+    const notif = document.getElementById('callbackNotif');
+    notif.classList.add('visible');
+
+    // Strong ring vibration
+    vibrate([500, 200, 500, 200, 500, 200, 500]);
+    playCallbackSound();
+
+    document.getElementById('sosMainLabel').textContent = 'La grúa te está llamando';
+    document.getElementById('sosMainSub').textContent = 'Contesta para confirmar los detalles';
+
+  }, 12000);
+}
+
+function acceptCallback() {
+  document.getElementById('callbackNotif').classList.remove('visible');
+  vibrate(100);
+
+  document.getElementById('step4').className = 'timeline-step done';
+  const s5 = document.getElementById('step5');
+  s5.className = 'timeline-step active';
+  document.getElementById('step5Time').textContent = getTime();
+
+  document.getElementById('sosStatusIcon').textContent = '✅';
+  document.getElementById('sosStatusText').textContent = 'EN CAMINO';
+  document.getElementById('sosStatusText').style.color = 'var(--green)';
+  document.getElementById('sosMainLabel').textContent = '¡Auxilio confirmado y en camino!';
+  document.getElementById('sosMainSub').textContent = 'Juan de Grúas Hernández llega en ~12 min';
+
+  // Final step done after a moment
+  setTimeout(() => {
+    s5.className = 'timeline-step done';
+    s5.querySelector('.timeline-detail').textContent = '¡Todo confirmado! La grúa viene hacia ti.';
+  }, 2000);
+}
+
+function dismissCallback() {
+  document.getElementById('callbackNotif').classList.remove('visible');
+}
+
+// BEACON MODE
+function toggleBeacon() {
+  const btn = document.getElementById('beaconBtn');
+  const fs = document.getElementById('sosFullscreen');
+
+  if (!beaconActive) {
+    beaconActive = true;
+    btn.classList.add('active-beacon');
+    btn.textContent = '💡 BALIZA ACTIVA — Toca para desactivar';
+    fs.classList.add('sos-phase-beacon');
+    vibrate([100, 50, 100]);
+
+    // Also try screen wake lock
+    if ('wakeLock' in navigator) {
+      navigator.wakeLock.request('screen').catch(()=>{});
+    }
+  } else {
+    beaconActive = false;
+    btn.classList.remove('active-beacon');
+    btn.textContent = '💡 ACTIVAR MODO BALIZA — Para que te encuentren de noche';
+    fs.classList.remove('sos-phase-beacon');
+  }
+}
+
+function cancelFullSOS() {
+  if (!confirm('¿Seguro que deseas cancelar la alerta SOS?\n\nSe notificará a las grúas que ya no necesitas ayuda.')) return;
+
+  sosActive = false;
+  beaconActive = false;
+
+  clearInterval(keepaliveInterval);
+  clearInterval(etaInterval);
+
+  document.getElementById('sosFullscreen').classList.remove('active');
+  document.getElementById('callbackNotif').classList.remove('visible');
+  document.getElementById('sosEtaBox').classList.remove('visible');
+  document.getElementById('navbar').style.display = 'flex';
+
+  // Reset timeline
+  ['step1','step2','step3','step4','step5'].forEach(id => {
+    document.getElementById(id).className = 'timeline-step waiting';
+  });
+
+  // Reset status
+  document.getElementById('sosStatusIcon').textContent = '📡';
+  document.getElementById('sosStatusText').textContent = 'ENVIANDO';
+  document.getElementById('sosStatusText').style.color = 'var(--red)';
+  document.getElementById('sosRingOuter').className = 'sos-ring-outer';
+  document.getElementById('sosMainLabel').textContent = 'Enviando alerta de emergencia...';
+  document.getElementById('sosMainSub').textContent = 'Obteniendo ubicación GPS';
+  document.getElementById('sosLiveDot').className = 'sos-live-dot';
+  document.getElementById('beaconBtn').classList.remove('active-beacon');
+  document.getElementById('beaconBtn').textContent = '💡 ACTIVAR MODO BALIZA — Para que te encuentren de noche';
+
+  vibrate(200);
+}
+</script>
+</body>
+</html>
